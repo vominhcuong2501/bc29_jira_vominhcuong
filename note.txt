@@ -1,0 +1,5 @@
+npm install formik (dùng để lấy dữ liệu nhập)
+npm install yup (dùng để validate cho formik)
+npm install history (sửa ver 4.10.0, xóa node-mudule, npm install, dùng để chuyển trang)
+$ npm install @tinymce/tinymce-react (control soạn thảo văn bản với định dang html)
+npm install react-html-parser (biên dịch các thẻ editor dc tạo ra bởi tinym)
