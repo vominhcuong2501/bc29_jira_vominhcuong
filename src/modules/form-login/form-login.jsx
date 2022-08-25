@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Checkbox, Form, Input, notification } from "antd";
-import { UserOutlined, KeyOutlined } from "@ant-design/icons";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { signinAction } from "../../store/actions/userAction";
 import { fetchUserLogin } from "../../services/user";
@@ -11,6 +11,7 @@ export default function FormLogin() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [form] = Form.useForm();
+  
 
   const handleSubmit = async (values) => {
     try {
@@ -21,15 +22,15 @@ export default function FormLogin() {
         ACCESS_TOKEN,
         JSON.stringify(result.data.content.accessToken)
       );
-      
+
       dispatch(signinAction(result.data.content));
       notification.success({
-        description: "Successfully !"
-      })
+        description: "Successfully !",
+      });
       navigate("/");
     } catch (err) {
       notification.error({
-        message: err.response.data.message,
+        message: err.response.data.content,
       });
     }
   };
@@ -60,9 +61,9 @@ export default function FormLogin() {
       >
         <Input
           size="large"
-          style={{ minWidth: 350 }}
+          style={{ width: 350 }}
           placeholder="Email"
-          prefix={<UserOutlined />}
+          prefix={<UserOutlined className="site-form-item-icon" />}
         />
       </Form.Item>
       <Form.Item
@@ -77,36 +78,47 @@ export default function FormLogin() {
       >
         <Input.Password
           size="large"
-          style={{ minWidth: 350 }}
+          style={{ width: 350 }}
           placeholder="Password"
-          prefix={<KeyOutlined />}
+          prefix={<LockOutlined className="site-form-item-icon" />}
         />
       </Form.Item>
       <Form.Item name="remember" valuePropName="checked">
         <Checkbox>Remember me</Checkbox>
       </Form.Item>
-      <p>If you don't have an account, click <a className="text-primary font-weight-bold" onClick={() =>navigate("/register")}>register</a></p>
       <Form.Item shouldUpdate>
         {() => {
           return (
-            <Button
-              style={{ backgroundColor: "rgb(102, 117, 223)" }}
-              htmlType="submit"
-              block
-              disabled={
-                !form.isFieldsTouched() ||
-                form.getFieldsError().some((ele) => ele.errors.length > 0)
-              }
-            >
-              SIGN IN
-            </Button>
+            <>
+              <Button
+                style={{ backgroundColor: "rgb(102, 117, 223)" }}
+                htmlType="submit"
+                block
+                disabled={
+                  !form.isFieldsTouched() ||
+                  form.getFieldsError().some((ele) => ele.errors.length > 0)
+                }
+              >
+                SIGN IN
+              </Button>
+              <p className="mt-2 mb-0">
+                If you don't have an account, click{" "}
+                <a
+                  className="text-primary font-weight-bold"
+                  onClick={() => navigate("/register")}
+                >
+                  register
+                </a>
+              </p>
+            </>
           );
         }}
       </Form.Item>
+
       <div className="text-center">
         <Button
           style={{
-            backgroundColor: "rgb(59, 89, 152)",
+            backgroundColor: "#065fd4",
             margin: "0 5px",
           }}
           shape="circle"

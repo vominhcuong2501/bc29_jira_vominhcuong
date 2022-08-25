@@ -1,6 +1,11 @@
 import React from "react";
 import { Button, Checkbox, Form, Input, notification } from "antd";
-import { UserOutlined, KeyOutlined, MailOutlined, PhoneOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  KeyOutlined,
+  MailOutlined,
+  PhoneOutlined,
+} from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { fetchUserRegister } from "../../services/user";
 import { useNavigate } from "react-router-dom";
@@ -13,12 +18,12 @@ export default function FromRegister() {
     try {
       await fetchUserRegister(values);
       notification.success({
-        description: "Successfully !"
-      })
+        description: "Successfully !",
+      });
       navigate("/login");
     } catch (err) {
       notification.error({
-        message: err.response.data.message,
+        message: err.response.data.content,
       });
     }
   };
@@ -33,7 +38,6 @@ export default function FromRegister() {
         passWord: "",
         name: "",
         phoneNumber: "",
-
       }}
     >
       <Form.Item
@@ -106,7 +110,6 @@ export default function FromRegister() {
             required: true,
             message: "Please input your phone number!",
           },
-          
         ]}
       >
         <Input
@@ -116,25 +119,34 @@ export default function FromRegister() {
           prefix={<PhoneOutlined />}
         />
       </Form.Item>
-      <p>If you already have an account, click <a className="text-primary font-weight-bold" onClick={() =>navigate("/login")}>login</a></p>
       <Form.Item shouldUpdate>
         {() => {
           return (
-            <Button
-              style={{ backgroundColor: "rgb(102, 117, 223)" }}
-              htmlType="submit"
-              block
-              disabled={
-                !form.isFieldsTouched() ||
-                form.getFieldsError().some((ele) => ele.errors.length > 0)
-              }
-            >
-              SIGN UP
-            </Button>
+            <>
+              <Button
+                style={{ backgroundColor: "#065fd4" }}
+                htmlType="submit"
+                block
+                disabled={
+                  !form.isFieldsTouched() ||
+                  form.getFieldsError().some((ele) => ele.errors.length > 0)
+                }
+              >
+                SIGN UP
+              </Button>
+              <p className="mt-2">
+                If you already have an account, click{" "}
+                <a
+                  className="text-primary font-weight-bold"
+                  onClick={() => navigate("/login")}
+                >
+                  login
+                </a>
+              </p>
+            </>
           );
         }}
       </Form.Item>
     </Form>
   );
 }
-

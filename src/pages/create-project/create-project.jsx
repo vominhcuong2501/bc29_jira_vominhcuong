@@ -1,7 +1,12 @@
-import React from 'react'
+import React from "react";
+import FormCreateProject from "../../modules/form-create-project/form-create-project";
+
 
 export default function CreateProject() {
+
   return (
-    <div>create-project</div>
-  )
+    <div className="container">
+      <FormCreateProject />
+    </div>
+  );
 }
