@@ -1,14 +1,14 @@
 import { lazy } from "react";
 import { useRoutes } from "react-router-dom";
-import CreateProject from "../pages/create-project/create-project";
-import AuthGuard from "../pages/guards/auth.guard";
-import NoAuthGuard from "../pages/guards/noAuth.guard";
-import ProjectManagement from "../pages/project-management/project-management";
 
 const HomeLayout = lazy(() => import("../layouts/home"))
 const Login = lazy(() => import("../pages/login/login"))
 const Register = lazy(() => import("../pages/register/register"))
 const Home = lazy(() => import("../pages/home/home"))
+const CreateProject = lazy(() => import("../pages/create-project/create-project"))
+const AuthGuard = lazy(() => import("../pages/guards/auth.guard"))
+const NoAuthGuard = lazy(() => import("../pages/guards/noAuth.guard"))
+const ProjectManagement = lazy(() => import("../pages/project-management/project-management"))
 
 export default function Router() {
     const routing = useRoutes([

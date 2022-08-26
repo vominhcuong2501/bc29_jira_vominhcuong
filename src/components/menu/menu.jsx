@@ -3,14 +3,13 @@ import { NavLink } from "react-router-dom";
 
 export default function Menu() {
   return (
-    <div className="menu">
-      <div className="account">
+    <div className="menu" style={{height: window.innerHeight}}>
+      <div className="account d-flex align-items-center">
         <div className="avatar">
           <img src={require("./../../assets/img/download.jfif")} alt="avatar" />
         </div>
         <div className="account-info">
-          <p>CyberLearn.vn</p>
-          <p>Report bugs</p>
+          <h5 className="font-weight-bold text-warning">Cyberbugs</h5>
         </div>
       </div>
       <div className="control">

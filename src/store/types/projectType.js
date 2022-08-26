@@ -1,0 +1,1 @@
+export const GET_PROJECT_DETAIL = "GET_PROJECT_DETAIL"

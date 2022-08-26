@@ -24,6 +24,20 @@ export default function FormCreateProject() {
       });
     };
   }, []);
+  const selectBefore = (
+    <Select defaultValue="http://" className="select-before">
+      <Select.Option value="http://">http://</Select.Option>
+      <Select.Option value="https://">https://</Select.Option>
+    </Select>
+  );
+  const selectAfter = (
+    <Select defaultValue=".com" className="select-after">
+      <Select.Option value=".com">.com</Select.Option>
+      <Select.Option value=".jp">.jp</Select.Option>
+      <Select.Option value=".cn">.cn</Select.Option>
+      <Select.Option value=".org">.org</Select.Option>
+    </Select>
+  );
 
   const { state: arrProject = [] } = useAsync({
     service: () => fetchProjectCategoryApi(),
@@ -76,14 +90,8 @@ export default function FormCreateProject() {
         <Form.Item
           label="URL"
           validateTrigger={["onChange"]}
-          rules={[
-            {
-              required: true,
-              message: "Please input your URL!",
-            },
-          ]}
         >
-          <Input size="large" />
+          <Input size="large" addonBefore={selectBefore} addonAfter={selectAfter} />
         </Form.Item>
         <span>
           <i
@@ -134,6 +142,7 @@ export default function FormCreateProject() {
           {() => {
             return (
               <Button
+              className="text-light"
                 style={{ backgroundColor: "#065fd4" }}
                 htmlType="submit"
                 disabled={

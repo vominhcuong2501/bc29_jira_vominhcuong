@@ -1,5 +1,5 @@
 import axios from "axios"
-import { ACCESS_TOKEN, BASE_URL } from "../constans/common"
+import { ACCESS_TOKEN, AUTHORIZATION, BASE_URL } from "../constans/common"
 
 export const fetchCreateProjectAuthorizeApi = newProject => {
     console.log(localStorage.getItem(ACCESS_TOKEN));
@@ -7,7 +7,7 @@ export const fetchCreateProjectAuthorizeApi = newProject => {
         url: `${BASE_URL}/Project/createProjectAuthorize`,
         method: "POST",
         data: newProject,
-        headers: {"Authorization": `Bearer ${localStorage.getItem(ACCESS_TOKEN).replace(/['"]+/g, '')}`}
+        headers: AUTHORIZATION
     })
 }
 
@@ -15,6 +15,31 @@ export const fetchGetAllProjectApi = () => {
     return axios({
         url: `${BASE_URL}/Project/getAllProject`,
         method: "GET",
-        headers: {"Authorization": `Bearer ${localStorage.getItem(ACCESS_TOKEN).replace(/['"]+/g, '')}`}
+        headers: AUTHORIZATION
+    })
+}
+
+export const fetchDeleteProjectApi = (id) => {
+    return axios({
+        url: `${BASE_URL}/Project/deleteProject?projectId=${id}`,
+        method: "DELETE",
+        headers: AUTHORIZATION
+
+    })
+}
+
+export const fetchProjectDetailApi = (id) => {
+    return axios({
+        url: `${BASE_URL}/Project/getProjectDetail?id=${id}`,
+        method: "GET",
+        headers: AUTHORIZATION
+    })
+}
+
+export const fetchUpdateProjectApi = (id, data) => {
+    return axios({
+        url: `${BASE_URL}/Project/updateProject?projectId=${id}`,
+        method: "PUT",
+        data: data
     })
 }

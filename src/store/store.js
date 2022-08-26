@@ -1,9 +1,10 @@
 import { combineReducers, createStore } from "redux";
 import { userReducer } from "./reducers/userReducer";
-
+import { modalEditProjectReducer } from "./reducers/modalEditReducer";
+import { projectReducer } from "./reducers/projectReducer";
 // Object Literals
 const rootReducer = combineReducers({
-  userReducer, 
+  userReducer, modalEditProjectReducer, projectReducer
 });
 
 export const store = createStore(

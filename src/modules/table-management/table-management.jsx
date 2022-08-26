@@ -3,19 +3,29 @@ import {
   EditOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
-import { Button, Input, Space, Table, Tag } from "antd";
+import { Button, Input, notification, Space, Table, Tag } from "antd";
 import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import { useAsync } from "../../hooks/useAsync";
-import { fetchGetAllProjectApi } from "../../services/project";
+import {
+  fetchDeleteProjectApi,
+  fetchGetAllProjectApi,
+  fetchProjectDetailApi,
+} from "../../services/project";
+import { openFormEditProjectAction } from "../../store/actions/modalEditAction";
+import { useDispatch } from "react-redux/es/exports";
+import "./table-management.scss";
+import { useNavigate } from "react-router-dom";
+import { getProjectDetail } from "../../store/actions/projectAction";
 // import ReactHtmlParser from "react-html-parser"
 
 export default function TableManagement() {
   const { state: data = [] } = useAsync({
     service: () => fetchGetAllProjectApi(),
   });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  console.log(data);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -123,6 +133,27 @@ export default function TableManagement() {
       ),
   });
 
+  const fetchDeleteProject = async (id) => {
+    try {
+      await fetchDeleteProjectApi(id);
+      notification.success({
+        description: "Successfully !",
+      });
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+      notification.error({
+        message: err.response.data.content,
+      });
+    }
+  };
+
+  const fetchProjectDetail = async (id) => {
+    const result = await fetchProjectDetailApi(id)
+    console.log(result.data.content);
+    dispatch(getProjectDetail(result.data.content))
+  }
+
   const columns = [
     {
       title: "ID",
@@ -168,7 +199,6 @@ export default function TableManagement() {
       title: "Creator",
       //   dataIndex: "creator",
       key: "creator",
-      ...getColumnSearchProps("creator"),
       sortDirections: ["descend"],
       sorter: (item2, item1) => {
         let creator1 = item1.creator?.name.trim().toLowerCase();
@@ -185,7 +215,6 @@ export default function TableManagement() {
       title: "Members",
       //   dataIndex: "members",
       key: "members",
-      ...getColumnSearchProps("members"),
       sortDirections: ["descend", "ascend"],
       sorter: (a, b) => a.member.length - b.member.length,
       render: (_, record) => (
@@ -212,16 +241,21 @@ export default function TableManagement() {
       render: (_, record) => (
         <Space size="middle">
           <a
-            title="Update movie"
-            className="text-warning"
+            title="Edit"
+            className="text-success"
             style={{ fontSize: 20 }}
+            onClick={() => {
+              dispatch(openFormEditProjectAction());
+              fetchProjectDetail(record.id)
+            }}
           >
             <EditOutlined />
           </a>
           <a
-            title="Delete movie"
+            title="Delete"
             className="text-danger"
             style={{ fontSize: 20 }}
+            onClick={() => fetchDeleteProject(record.id)}
           >
             <DeleteOutlined />
           </a>
@@ -230,10 +264,10 @@ export default function TableManagement() {
     },
   ];
   return (
-    <div className="container">
-      <h1 className="m-5">Project management</h1>
+    <div className="container mx-5">
+      <h3 className="my-3 font-weight-bold">Project management</h3>
       <Table
-        className="mx-5"
+        className="table m-0"
         rowKey={"id"}
         columns={columns}
         dataSource={data}

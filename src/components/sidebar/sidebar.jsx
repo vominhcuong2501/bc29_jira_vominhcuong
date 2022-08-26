@@ -1,32 +1,49 @@
-import React from "react";
+import {
+  SearchOutlined,
+  PlusOutlined,
+  LaptopOutlined,
+} from "@ant-design/icons";
+import { Layout, Menu } from "antd";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+
+const { Sider } = Layout;
 
 export default function Sidebar() {
+  const [collapsed, setCollapsed] = useState(false);
+  const items = [
+    {
+      label: (
+        <Link to="/">
+          <LaptopOutlined  style={{ fontSize: 25, textAlign: "center" }} />
+        </Link>
+      ),
+      key: "1",
+    },
+    {
+      label: "Create issue",
+      key: "2",
+      icon: <PlusOutlined style={{ fontSize: 20 }} />,
+    },
+    {
+      label: "Search",
+      key: "3",
+      icon: <SearchOutlined style={{ fontSize: 20 }} />,
+    },
+  ];
   return (
-    <div className="sideBar">
-      <div className="sideBar-top">
-        <div className="sideBar-icon">
-          <i className="fab fa-jira mr-2" />
-        </div>
-        <div
-          className="sideBar-icon"
-          data-toggle="modal"
-          data-target="#searchModal"
-          style={{ cursor: "pointer" }}
-        >
-          <i className="fa fa-search mr-2" />
-          <span className="title">SEARCH ISSUES</span>
-        </div>
-        <div className="sideBar-icon">
-          <i className="fa fa-plus mr-2" />
-          <span className="title">CREATE ISSUES</span>
-        </div>
-      </div>
-      <div className="sideBar-bottom">
-        <div className="sideBar-icon">
-          <i className="fa fa-question-circle mr-2" />
-          <span className="title">ABOUT</span>
-        </div>
-      </div>
-    </div>
+    <Sider
+      collapsible
+      collapsed={collapsed}
+      onCollapse={(value) => setCollapsed(value)}
+      style={{ height: window.innerHeight }}
+    >
+      <Menu
+        theme="dark"
+        defaultSelectedKeys={["1"]}
+        mode="inline"
+        items={items}
+      ></Menu>
+    </Sider>
   );
 }
