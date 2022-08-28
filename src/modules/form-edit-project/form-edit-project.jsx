@@ -1,22 +1,20 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Button, Form, Input, notification } from "antd";
-import { useNavigate,  } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Select } from "antd";
 import { fetchProjectCategoryApi } from "../../services/category";
 import { useAsync } from "../../hooks/useAsync";
 import { Editor } from "@tinymce/tinymce-react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  fetchUpdateProjectApi,
-} from "../../services/project";
+import { fetchUpdateProjectApi } from "../../services/project";
 import { closeEditModalAction } from "../../store/actions/modalEditAction";
+import { getUpdateTableAction } from "../../store/actions/projectAction";
 
 export default function FormEditProject() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const dispatch = useDispatch()
-  const projectEdit = useSelector((state) => state.projectReducer);
-
+  const dispatch = useDispatch();
+  const { projectEdit, table } = useSelector((state) => state.projectReducer);
   const { state: arrProject = [] } = useAsync({
     service: () => fetchProjectCategoryApi(),
   });
@@ -24,30 +22,42 @@ export default function FormEditProject() {
   const editorRef = useRef(null);
 
   useEffect(() => {
-    if (projectEdit.projectEdit) {
+    if (projectEdit) {
       form.setFieldsValue({
-        ...projectEdit.projectEdit,
-        categoryId: projectEdit.projectEdit?.projectCategory?.name,
+        ...projectEdit,
+        categoryId: projectEdit.projectCategory?.id,
       });
     }
-  }, [projectEdit.projectEdit]);
-  console.log(projectEdit.projectEdit);
+  }, [projectEdit]);
 
   const handleSubmit = async (values) => {
-    const projectUpdate = { ...values, description: editorRef.current.getContent()};
+    const projectUpdate = {
+      ...values,
+      description: editorRef.current.getContent(),
+    };
     try {
       await fetchUpdateProjectApi(projectUpdate);
+
       notification.success({
         description: "Successfully !",
       });
-      dispatch(closeEditModalAction())
+      dispatch(closeEditModalAction());
+      navigate("/");
     } catch (error) {
-      console.log(error);
-
       notification.error({
-        message: error.response.data,
+        message: error.response.data.content,
       });
     }
+    // for(let index in table) {
+    //   let newTable = []
+    //   if(table[index].id === projectUpdate.id) {
+    //     newTable = [...table, table[index] = projectUpdate]
+    //   }
+    //   dispatch(getUpdateTableAction(newTable));
+      
+    // }
+    
+    
   };
 
   return (
@@ -105,13 +115,10 @@ export default function FormEditProject() {
                 },
               ]}
             >
-              <Select
-                size="large"
-                value={projectEdit.projectEdit?.projectCategory?.name}
-              >
+              <Select size="large" value={projectEdit.projectCategory?.id}>
                 {arrProject?.map((ele, index) => {
                   return (
-                    <Select.Option values={ele.id} key={index}>
+                    <Select.Option value={ele.id} key={index}>
                       {ele.projectCategoryName}
                     </Select.Option>
                   );
@@ -130,7 +137,7 @@ export default function FormEditProject() {
           <span>Description</span>
           <Editor
             onInit={(evt, editor) => (editorRef.current = editor)}
-            initialValue={projectEdit.projectEdit?.description}
+            initialValue={projectEdit.description}
             name="description"
             init={{
               height: 300,
@@ -162,7 +169,6 @@ export default function FormEditProject() {
             Cancel
           </Button>
         </Form.Item>
-        
       </Form>
     </div>
   );

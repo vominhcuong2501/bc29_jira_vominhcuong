@@ -45,3 +45,21 @@ export const fetchUpdateProjectApi = (projectUpdate) => {
 
     })
 }
+
+export const assignUserProjectApi = (userProject) => {
+    return axios({
+        url: `${BASE_URL}/Project/assignUserProject`,
+        method: "POST",
+        data: userProject,
+        headers: AUTHORIZATION
+    })
+}
+
+
+// export const getUserByProjectApi = (projectId) => {
+//     return axios({
+//         url: `${BASE_URL}/Users/getUserByProjectId?idProject=${projectId}`,
+//         method: "GET",
+//         headers: AUTHORIZATION
+//     })
+// }

@@ -3,7 +3,6 @@ import { CLOSE_MODAL_EDIT, OPEN_FORM_EDIT_PROJECT } from "../types/modalEditType
 const DEFAULT_STATE = {
     visible: false,
     componentModalContent: "",
-    // callBackSubmit: (propsValue) => { alert("Demo !") }
 };
 
 export const modalEditProjectReducer = (state = DEFAULT_STATE, action) => {

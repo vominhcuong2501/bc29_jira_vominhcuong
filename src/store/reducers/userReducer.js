@@ -1,5 +1,5 @@
 import { USER_LOGIN_KEY } from "../../constans/common";
-import { SET_USER_INFO } from "../types/userType";
+import { GET_USER, SET_USER_INFO } from "../types/userType";
 
 // store reducer
 let userInfo = localStorage.getItem(USER_LOGIN_KEY);
@@ -10,6 +10,7 @@ if (userInfo) {
 
 const DEFAULT_STATE = {
   userInfo: userInfo,
+  userSearch: []
 };
 
 export const userReducer = (state = DEFAULT_STATE, { type, payload }) => {
@@ -17,6 +18,10 @@ export const userReducer = (state = DEFAULT_STATE, { type, payload }) => {
     case SET_USER_INFO: {
       state.userInfo = payload;
       return { ...state };
+    }
+    
+    case GET_USER: {
+      return {...state, userSearch: payload}
     }
     default:
       return { ...state };

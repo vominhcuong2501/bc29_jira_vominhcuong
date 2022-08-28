@@ -3,29 +3,62 @@ import {
   EditOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
-import { Button, Input, notification, Space, Table, Tag } from "antd";
-import React, { useRef, useState } from "react";
-import Highlighter from "react-highlight-words";
-import { useAsync } from "../../hooks/useAsync";
 import {
+  Avatar,
+  Button,
+  Input,
+  notification,
+  Space,
+  Table,
+  Tag,
+  Popover,
+  AutoComplete,
+} from "antd";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import Highlighter from "react-highlight-words";
+import {
+  assignUserProjectApi,
   fetchDeleteProjectApi,
   fetchGetAllProjectApi,
   fetchProjectDetailApi,
 } from "../../services/project";
 import { openFormEditProjectAction } from "../../store/actions/modalEditAction";
-import { useDispatch } from "react-redux/es/exports";
+import { useDispatch, useSelector } from "react-redux/es/exports";
 import "./table-management.scss";
-import { useNavigate } from "react-router-dom";
-import { getProjectDetail } from "../../store/actions/projectAction";
+import {
+  getProjectDetail,
+  getTableAction,
+} from "../../store/actions/projectAction";
+import { getUserApi, removeUserProjectApi } from "../../services/user";
+import { getUserAction } from "../../store/actions/userAction";
+import { LoadingContext } from "../../contexts/loading.context";
 
 export default function TableManagement() {
+  // biên dịch cho thư viện tiny
   const parse = require("html-react-parser");
-  const { state: data = [] } = useAsync({
-    service: () => fetchGetAllProjectApi(),
-  });
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
+  const [value, setValue] = useState();
+
+  const { table } = useSelector((state) => state.projectReducer);
+
+  const [loadingState, setLoadingState] = useContext(LoadingContext);
+
+  useEffect(() => {
+    fetchGetAllProject();
+  }, []);
+
+  // call api render table
+  const fetchGetAllProject = async () => {
+    setLoadingState({ isLoading: true });
+    const result = await fetchGetAllProjectApi();
+    setLoadingState({ isLoading: false });
+    dispatch(getTableAction(result.data.content));
+  };
+
+  const dispatch = useDispatch();
+  const { userSearch } = useSelector((state) => state.userReducer);
+
+  // các tính năng của table
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -133,13 +166,14 @@ export default function TableManagement() {
       ),
   });
 
- const fetchDeleteProject = async (id) => {
+  // call api xóa project
+  const fetchDeleteProject = async (id) => {
     try {
       await fetchDeleteProjectApi(id);
       notification.success({
         description: "Successfully !",
       });
-      navigate("/");
+      fetchGetAllProject();
     } catch (err) {
       console.log(err);
       notification.error({
@@ -148,6 +182,7 @@ export default function TableManagement() {
     }
   };
 
+  // call api thông tin của project và gửi lên reducer cho form edit lấy thông tin
   const fetchProjectDetail = async (id) => {
     const result = await fetchProjectDetailApi(id);
     dispatch(getProjectDetail(result.data.content));
@@ -208,31 +243,150 @@ export default function TableManagement() {
           return 1;
         }
       },
-      render: (_, record) => <Tag color="green">{record.creator.name}</Tag>,
+      render: (_, record) => <Tag color="green">{record.creator?.name}</Tag>,
     },
     {
       title: "Members",
-      //   dataIndex: "members",
+      dataIndex: "members",
       key: "members",
       sortDirections: ["descend", "ascend"],
       sorter: (a, b) => a.member.length - b.member.length,
-      render: (_, record) => (
-        <img
-          src={record.members.avatar}
-          alt={record.members.avatar}
-          width={30}
-        />
-      ),
-    },
-    {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
-      render: (text, record, index) => {
-        let jsxContent = parse(text);
-        return <div>{jsxContent}</div>;
+      render: (_, record) => {
+        return (
+          <div>
+            {record.members?.slice(0, 3).map((ele, index) => {
+              return (
+                <Popover
+                  key={index}
+                  placement="top"
+                  title={"Members"}
+                  content={() => {
+                    return (
+                      <table className="table">
+                        <thead>
+                          <tr>
+                            <th>UserId</th>
+                            <th>Avatar</th>
+                            <th>Name</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {record.members?.map((ele, index) => {
+                            return (
+                              <tr key={index}>
+                                <td>{ele.userId}</td>
+                                <td>
+                                  <img
+                                    src={ele.avatar}
+                                    alt={ele.avatar}
+                                    width={30}
+                                    height={30}
+                                  />
+                                </td>
+                                <td>{ele.name}</td>
+                                <td>
+                                  <a
+                                    title="Delete"
+                                    className="text-danger"
+                                    shape="circle"
+                                    onClick={async () => {
+                                      try {
+                                        await removeUserProjectApi({
+                                          projectId: record.id,
+                                          userId: ele.userId,
+                                        });
+                                        notification.success({
+                                          description: "Successfully !",
+                                        });
+                                        fetchGetAllProject();
+                                      } catch (error) {
+                                        notification.error({
+                                          message: error.response.data.content,
+                                        });
+                                      }
+                                    }}
+                                  >
+                                    <DeleteOutlined />
+                                  </a>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    );
+                  }}
+                >
+                  <Avatar src={ele.avatar} />
+                </Popover>
+              );
+            })}
+            {record.members?.length > 3 ? <Avatar>...</Avatar> : ""}
+            <Popover
+              placement="topLeft"
+              title={<span>Add member</span>}
+              content={() => {
+                return (
+                  <div>
+                    <AutoComplete
+                      // lấy dữ liệu từ reducer hiển thị hộp thoại user cần tìm
+                      options={userSearch?.map((user, index) => {
+                        return {
+                          label: user.name,
+                          value: user.userId.toString(),
+                        };
+                      })}
+                      value={value}
+                      // set lại giá trị của hộp thoại khi chọn không hiển thị value mà thay bằng label
+                      onSelect={async (valueSelect, option) => {
+                        setValue(option.label);
+                        // gọi api gửi về backend
+                        try {
+                          await assignUserProjectApi({
+                            projectId: record.id,
+                            userId: Number(valueSelect),
+                          });
+                          notification.success({
+                            description: "Successfully !",
+                          });
+                          fetchGetAllProject();
+                        } catch (error) {
+                          notification.error({
+                            message: error.response.data.content,
+                          });
+                        }
+                      }}
+                      onChange={(text) => {
+                        setValue(text);
+                      }}
+                      style={{ width: "100%" }}
+                      // gõ tìm kiếm
+                      onSearch={async (keyWord) => {
+                        const result = await getUserApi(keyWord);
+                        dispatch(getUserAction(result.data.content));
+                      }}
+                    />
+                  </div>
+                );
+              }}
+              trigger="click"
+            >
+              <Button shape="circle">+</Button>
+            </Popover>
+          </div>
+        );
       },
     },
+    // {
+    //   title: "Description",
+    //   dataIndex: "description",
+    //   key: "description",
+    //   render: (text, record, index) => {
+    //     let jsxContent = parse(text);
+    //     return <div>{jsxContent}</div>;
+    //   },
+    // },
     {
       title: "Action",
       dataIndex: "action",
@@ -269,7 +423,7 @@ export default function TableManagement() {
         className="table m-0"
         rowKey={"id"}
         columns={columns}
-        dataSource={data}
+        dataSource={table}
       />
     </div>
   );
