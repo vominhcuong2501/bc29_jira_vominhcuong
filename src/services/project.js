@@ -36,10 +36,12 @@ export const fetchProjectDetailApi = (id) => {
     })
 }
 
-export const fetchUpdateProjectApi = (id, data) => {
+export const fetchUpdateProjectApi = (projectUpdate) => {
     return axios({
-        url: `${BASE_URL}/Project/updateProject?projectId=${id}`,
+        url: `${BASE_URL}/Project/updateProject?projectId=${projectUpdate.id}`,
         method: "PUT",
-        data: data
+        data: projectUpdate,
+        headers: AUTHORIZATION
+
     })
 }

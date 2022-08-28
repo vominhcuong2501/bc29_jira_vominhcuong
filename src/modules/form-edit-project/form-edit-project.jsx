@@ -1,19 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Form, Input, notification } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,  } from "react-router-dom";
 import { Select } from "antd";
 import { fetchProjectCategoryApi } from "../../services/category";
 import { useAsync } from "../../hooks/useAsync";
 import { Editor } from "@tinymce/tinymce-react";
-import { useDispatch, useSelector } from "react-redux";
-import { setSubmitEditAction } from "../../store/actions/modalEditAction";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchUpdateProjectApi,
+} from "../../services/project";
+import { closeEditModalAction } from "../../store/actions/modalEditAction";
 
 export default function FormEditProject() {
   const [form] = Form.useForm();
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
   const projectEdit = useSelector((state) => state.projectReducer);
 
-  console.log(projectEdit.projectEdit?.projectCategory?.name);
   const { state: arrProject = [] } = useAsync({
     service: () => fetchProjectCategoryApi(),
   });
@@ -24,25 +27,27 @@ export default function FormEditProject() {
     if (projectEdit.projectEdit) {
       form.setFieldsValue({
         ...projectEdit.projectEdit,
+        categoryId: projectEdit.projectEdit?.projectCategory?.name,
       });
     }
   }, [projectEdit.projectEdit]);
+  console.log(projectEdit.projectEdit);
 
-  const handleSubmit1 = (values) => {
-    // const project = {...values, description: editorRef.current.getContent()}
-    // try{
-    //   await fetchCreateProjectAuthorizeApi(project)
-    //   notification.success({
-    //     description: "Successfully !"
-    //   })
-    //   navigate("/")
-    // } catch(err) {
-    //   console.log(err);
-    //   notification.error({
-    //     message: err.response.data.content
-    //   })
-    // }
-    console.log(values);
+  const handleSubmit = async (values) => {
+    const projectUpdate = { ...values, description: editorRef.current.getContent()};
+    try {
+      await fetchUpdateProjectApi(projectUpdate);
+      notification.success({
+        description: "Successfully !",
+      });
+      dispatch(closeEditModalAction())
+    } catch (error) {
+      console.log(error);
+
+      notification.error({
+        message: error.response.data,
+      });
+    }
   };
 
   return (
@@ -50,7 +55,7 @@ export default function FormEditProject() {
       <Form
         layout="vertical"
         form={form}
-        onFinish={handleSubmit1}
+        onFinish={handleSubmit}
         initialValues={{
           projectName: "",
           categoryId: "",
@@ -104,11 +109,6 @@ export default function FormEditProject() {
                 size="large"
                 value={projectEdit.projectEdit?.projectCategory?.name}
               >
-                <Select.Option
-                  value={projectEdit.projectEdit?.projectCategory?.name}
-                >
-                  {projectEdit.projectEdit?.projectCategory?.name}
-                </Select.Option>
                 {arrProject?.map((ele, index) => {
                   return (
                     <Select.Option values={ele.id} key={index}>
@@ -146,15 +146,23 @@ export default function FormEditProject() {
             }}
           />
         </div>
-        <Form.Item shouldUpdate>
+        <Form.Item className="text-right">
           <Button
             className="mt-4 text-light"
             style={{ backgroundColor: "#065fd4" }}
             htmlType="submit"
           >
-            Save changes
+            Submit
+          </Button>
+          <Button
+            className="mt-4 ml-2 bg-light"
+            style={{ backgroundColor: "#white" }}
+            onClick={() => dispatch(closeEditModalAction())}
+          >
+            Cancel
           </Button>
         </Form.Item>
+        
       </Form>
     </div>
   );

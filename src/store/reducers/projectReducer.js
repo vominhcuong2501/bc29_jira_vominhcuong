@@ -7,7 +7,7 @@ const DEFAULT_STATE = {
 export const projectReducer = (state = DEFAULT_STATE, action) => {
     switch (action.type) {
         case GET_PROJECT_DETAIL: {
-            return {...state, projectEdit: action.payload}
+            return { ...state, projectEdit: action.payload }
         }
 
         default:

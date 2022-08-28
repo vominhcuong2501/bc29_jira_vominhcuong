@@ -17,9 +17,9 @@ import { useDispatch } from "react-redux/es/exports";
 import "./table-management.scss";
 import { useNavigate } from "react-router-dom";
 import { getProjectDetail } from "../../store/actions/projectAction";
-// import ReactHtmlParser from "react-html-parser"
 
 export default function TableManagement() {
+  const parse = require("html-react-parser");
   const { state: data = [] } = useAsync({
     service: () => fetchGetAllProjectApi(),
   });
@@ -133,7 +133,7 @@ export default function TableManagement() {
       ),
   });
 
-  const fetchDeleteProject = async (id) => {
+ const fetchDeleteProject = async (id) => {
     try {
       await fetchDeleteProjectApi(id);
       notification.success({
@@ -149,10 +149,9 @@ export default function TableManagement() {
   };
 
   const fetchProjectDetail = async (id) => {
-    const result = await fetchProjectDetailApi(id)
-    console.log(result.data.content);
-    dispatch(getProjectDetail(result.data.content))
-  }
+    const result = await fetchProjectDetailApi(id);
+    dispatch(getProjectDetail(result.data.content));
+  };
 
   const columns = [
     {
@@ -225,15 +224,15 @@ export default function TableManagement() {
         />
       ),
     },
-    // {
-    //     title: "Description",
-    //     dataIndex: "description",
-    //     key: "description",
-    //   render: (text, record, index) => {
-    //     let jsxContent = ReactHtmlParser(text)
-    //     return <div>{jsxContent}</div>
-    //   }
-    //   },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      render: (text, record, index) => {
+        let jsxContent = parse(text);
+        return <div>{jsxContent}</div>;
+      },
+    },
     {
       title: "Action",
       dataIndex: "action",
@@ -246,7 +245,7 @@ export default function TableManagement() {
             style={{ fontSize: 20 }}
             onClick={() => {
               dispatch(openFormEditProjectAction());
-              fetchProjectDetail(record.id)
+              fetchProjectDetail(record.id);
             }}
           >
             <EditOutlined />

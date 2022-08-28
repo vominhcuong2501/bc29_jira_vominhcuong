@@ -52,13 +52,14 @@ export default function FormCreateProject() {
       notification.success({
         description: "Successfully !"
       })
-      navigate("/")
+      navigate("/project-management")
     } catch(err) {
       console.log(err);
       notification.error({
         message: err.response.data.content
       })
     }
+    console.log(project);
   };
 
   return (
@@ -150,7 +151,7 @@ export default function FormCreateProject() {
                   form.getFieldsError().some((ele) => ele.errors.length > 0)
                 }
               >
-                Save changes
+              Submit
               </Button>
             );
           }}
