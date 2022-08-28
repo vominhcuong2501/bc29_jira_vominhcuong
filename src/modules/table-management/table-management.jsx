@@ -39,8 +39,7 @@ export default function TableManagement() {
 
   const [value, setValue] = useState();
 
-  const { table } = useSelector((state) => state.projectReducer);
-
+  const [table, setTable] = useState();
   const [loadingState, setLoadingState] = useContext(LoadingContext);
 
   useEffect(() => {
@@ -52,7 +51,7 @@ export default function TableManagement() {
     setLoadingState({ isLoading: true });
     const result = await fetchGetAllProjectApi();
     setLoadingState({ isLoading: false });
-    dispatch(getTableAction(result.data.content));
+    setTable(result.data.content);
   };
 
   const dispatch = useDispatch();
@@ -394,6 +393,7 @@ export default function TableManagement() {
       render: (_, record) => (
         <Space size="middle">
           <a
+            table={table}
             title="Edit"
             className="text-success"
             style={{ fontSize: 20 }}

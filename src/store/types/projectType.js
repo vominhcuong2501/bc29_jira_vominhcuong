@@ -1,3 +1,2 @@
 export const GET_PROJECT_DETAIL = "GET_PROJECT_DETAIL";
-export const GET_TABLE = 'GET_TABLE'
-export const UPDATE_TABLE = 'UPDATE_TABLE'
+

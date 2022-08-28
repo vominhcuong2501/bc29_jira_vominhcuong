@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Form, Input, notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Select } from "antd";
@@ -8,17 +8,15 @@ import { Editor } from "@tinymce/tinymce-react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUpdateProjectApi } from "../../services/project";
 import { closeEditModalAction } from "../../store/actions/modalEditAction";
-import { getUpdateTableAction } from "../../store/actions/projectAction";
 
-export default function FormEditProject() {
+export default function FormEditProject(props) {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { projectEdit, table } = useSelector((state) => state.projectReducer);
+  const { projectEdit } = useSelector((state) => state.projectReducer);
   const { state: arrProject = [] } = useAsync({
     service: () => fetchProjectCategoryApi(),
   });
-
   const editorRef = useRef(null);
 
   useEffect(() => {
@@ -48,16 +46,6 @@ export default function FormEditProject() {
         message: error.response.data.content,
       });
     }
-    // for(let index in table) {
-    //   let newTable = []
-    //   if(table[index].id === projectUpdate.id) {
-    //     newTable = [...table, table[index] = projectUpdate]
-    //   }
-    //   dispatch(getUpdateTableAction(newTable));
-      
-    // }
-    
-    
   };
 
   return (
