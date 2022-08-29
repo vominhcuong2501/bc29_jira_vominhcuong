@@ -28,7 +28,7 @@ export const fetchDeleteProjectApi = (id) => {
     })
 }
 
-export const fetchProjectDetailApi = (id) => {
+export const fetchGetProjectDetailApi = (id) => {
     return axios({
         url: `${BASE_URL}/Project/getProjectDetail?id=${id}`,
         method: "GET",

@@ -6,22 +6,30 @@ import {
 import { Layout, Menu } from "antd";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux/es/exports";
+import { openFormCreateTaskAction } from "../../store/actions/modalEditAction";
 
 const { Sider } = Layout;
 
 export default function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+  const dispatch = useDispatch()
+  const [collapsed, setCollapsed] = useState(true);
   const items = [
     {
       label: (
         <Link to="/">
-          <LaptopOutlined  style={{ fontSize: 25, textAlign: "center" }} />
+          Trang chủ
         </Link>
       ),
       key: "1",
+      icon: <LaptopOutlined style={{ fontSize: 20 }} />,
     },
     {
-      label: "Create issue",
+      label: (
+        <a onClick={() => dispatch(openFormCreateTaskAction())}>
+          Create task
+        </a>
+      ),
       key: "2",
       icon: <PlusOutlined style={{ fontSize: 20 }} />,
     },

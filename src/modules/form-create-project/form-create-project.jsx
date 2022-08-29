@@ -151,7 +151,7 @@ export default function FormCreateProject() {
                   form.getFieldsError().some((ele) => ele.errors.length > 0)
                 }
               >
-              Submit
+              Create project
               </Button>
             );
           }}

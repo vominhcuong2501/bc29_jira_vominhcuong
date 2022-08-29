@@ -20,25 +20,31 @@ import {
   assignUserProjectApi,
   fetchDeleteProjectApi,
   fetchGetAllProjectApi,
-  fetchProjectDetailApi,
+  fetchGetProjectDetailApi,
 } from "../../services/project";
 import { openFormEditProjectAction } from "../../store/actions/modalEditAction";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import "./table-management.scss";
 import {
-  getProjectDetail,
+  getProjectEditAction,
   getTableAction,
 } from "../../store/actions/projectAction";
 import { getUserApi, removeUserProjectApi } from "../../services/user";
 import { getUserAction } from "../../store/actions/userAction";
 import { LoadingContext } from "../../contexts/loading.context";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export default function TableManagement() {
-  const parse = require("html-react-parser"); // biên dịch cho thư viện tiny
   const [value, setValue] = useState();
+
   const dispatch = useDispatch();
+
   const { table } = useSelector((state) => state.projectReducer);
+
+  const { userSearch } = useSelector((state) => state.userReducer);
+
   const [loadingState, setLoadingState] = useContext(LoadingContext);
+
   useEffect(() => {
     fetchGetAllProject();
   }, []);
@@ -50,8 +56,6 @@ export default function TableManagement() {
     setLoadingState({ isLoading: false });
     dispatch(getTableAction(result.data.content));
   };
-
-  const { userSearch } = useSelector((state) => state.userReducer);
 
   // các tính năng của table
   const [searchText, setSearchText] = useState("");
@@ -175,9 +179,9 @@ export default function TableManagement() {
   };
 
   // call api thông tin của project và gửi lên reducer cho form edit lấy thông tin
-  const fetchProjectDetail = async (id) => {
-    const result = await fetchProjectDetailApi(id);
-    dispatch(getProjectDetail(result.data.content));
+  const fetchProjectEdit = async (id) => {
+    const result = await fetchGetProjectDetailApi(id);
+    dispatch(getProjectEditAction(result.data.content));
   };
 
   const columns = [
@@ -203,6 +207,11 @@ export default function TableManagement() {
         } else {
           return 1;
         }
+      },
+      render: (text, record, index) => {
+        return (
+          <NavLink className="text-dark" to={`/project-detail/${record.id}`}>{text}</NavLink>
+        );
       },
     },
     {
@@ -386,13 +395,12 @@ export default function TableManagement() {
       render: (_, record) => (
         <Space size="middle">
           <a
-            table={table}
             title="Edit"
             className="text-success"
             style={{ fontSize: 20 }}
             onClick={() => {
               dispatch(openFormEditProjectAction());
-              fetchProjectDetail(record.id);
+              fetchProjectEdit(record.id);
             }}
           >
             <EditOutlined />

@@ -1,5 +1,8 @@
+export const GET_PROJECT_EDIT = "GET_PROJECT_EDIT";
 export const GET_PROJECT_DETAIL = "GET_PROJECT_DETAIL";
 export const GET_TABLE = "GET_TABLE"
 export const UPDATE_TABLE = "UPDATE_TABLE"
+export const GET_ALL_PROJECT = "GET_ALL_PROJECT"
+
 
 

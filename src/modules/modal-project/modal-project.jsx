@@ -3,8 +3,8 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { closeEditModalAction } from "../../store/actions/modalEditAction";
 
-export default function ModalEditProject(props) {
-  const { visible, componentModalContent, callBackSubmit } = useSelector(
+export default function ModalProject(props) {
+  const { visible, componentModalContent, title } = useSelector(
     (state) => state.modalEditProjectReducer
   );
   const dispatch = useDispatch();
@@ -16,7 +16,7 @@ export default function ModalEditProject(props) {
   return (
     <>
       <Drawer
-        title="Edit project"
+        title={title}
         width={720}
         onClose={onClose}
         visible={visible}

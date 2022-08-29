@@ -1,8 +1,14 @@
 .ant-table-cell {
-    padding:8px 10px !important;
+  padding: 10px !important;
+  a {
+    transition: all 0.5s;
+    &:hover {
+      text-decoration: none;
+      color: blue !important;
+    }
+  }
 }
 .ant-table-pagination.ant-pagination {
-    margin-top: 20px;
-    margin-bottom: 0;
+  margin-top: 20px;
+  margin-bottom: 0;
 }
-

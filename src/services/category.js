@@ -1,9 +1,11 @@
 import axios from "axios"
-import { BASE_URL } from "../constans/common"
+import { AUTHORIZATION, BASE_URL } from "../constans/common"
 
 export const fetchProjectCategoryApi = () => {
     return axios({
         url: `${BASE_URL}/ProjectCategory`,
-        method: "GET"
+        method: "GET",
+        headers: AUTHORIZATION
+
     })
 }
