@@ -34,14 +34,11 @@ import { getUserAction } from "../../store/actions/userAction";
 import { LoadingContext } from "../../contexts/loading.context";
 
 export default function TableManagement() {
-  // biên dịch cho thư viện tiny
-  const parse = require("html-react-parser");
-
+  const parse = require("html-react-parser"); // biên dịch cho thư viện tiny
   const [value, setValue] = useState();
-
-  const [table, setTable] = useState();
+  const dispatch = useDispatch();
+  const { table } = useSelector((state) => state.projectReducer);
   const [loadingState, setLoadingState] = useContext(LoadingContext);
-
   useEffect(() => {
     fetchGetAllProject();
   }, []);
@@ -51,28 +48,24 @@ export default function TableManagement() {
     setLoadingState({ isLoading: true });
     const result = await fetchGetAllProjectApi();
     setLoadingState({ isLoading: false });
-    setTable(result.data.content);
+    dispatch(getTableAction(result.data.content));
   };
 
-  const dispatch = useDispatch();
   const { userSearch } = useSelector((state) => state.userReducer);
 
   // các tính năng của table
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
-
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
-
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
   };
-
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,

@@ -8,12 +8,13 @@ import { Editor } from "@tinymce/tinymce-react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUpdateProjectApi } from "../../services/project";
 import { closeEditModalAction } from "../../store/actions/modalEditAction";
+import { setTableAction } from "../../store/actions/projectAction";
 
 export default function FormEditProject(props) {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { projectEdit } = useSelector((state) => state.projectReducer);
+  const { projectEdit, table } = useSelector((state) => state.projectReducer);
   const { state: arrProject = [] } = useAsync({
     service: () => fetchProjectCategoryApi(),
   });
@@ -40,12 +41,32 @@ export default function FormEditProject(props) {
         description: "Successfully !",
       });
       dispatch(closeEditModalAction());
-      navigate("/");
     } catch (error) {
       notification.error({
         message: error.response.data.content,
       });
     }
+
+    for (let key in table) {
+      let newCategoryName = "";
+      if (projectUpdate.categoryId === 1) {
+        newCategoryName = "Dự án web";
+      } else if (projectUpdate.categoryId === 2) {
+        newCategoryName = "Dự án phần mềm";
+      } else {
+        newCategoryName = "Dự án di động";
+      }
+      if (table[key].id === projectUpdate.id) {
+        table[key] = {
+          ...table[key],
+          description: projectUpdate.description,
+          categoryId: projectUpdate.categoryId,
+          projectName: projectUpdate.projectName,
+          categoryName: newCategoryName,
+        };
+      }
+    }
+    dispatch(setTableAction(table));
   };
 
   return (
