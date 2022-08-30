@@ -1,6 +1,12 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { fetchTaskDetailApi } from "../../services/task";
+import { getTaskDetailAction } from "../../store/actions/taskAcion";
+import { notification } from "antd";
 
 export default function MainContent(props) {
+  const dispatch = useDispatch();
+
   const {
     creator,
     description,
@@ -9,83 +15,65 @@ export default function MainContent(props) {
     projectCategory,
     projectName,
   } = props.projectDetail;
+
   const renderCardTaskList = () => {
     return lstTask?.map((ele) => {
       return (
         <div
           className="card "
-          style={{ height: "25rem", width: "17rem" }}
+          style={{ height: "auto", width: "17rem" }}
           key={ele.statusId}
         >
           <div className="card-header">{ele.statusName}</div>
           <ul className="list-group list-group-flush">
-            <li
-              className="list-group-item"
-              data-toggle="modal"
-              data-target="#infoModal"
-              style={{ cursor: "pointer" }}
-            >
-              <p>
-                Each issue has a single reporter but can have multiple assignees
-              </p>
-              <div className="block" style={{ display: "flex" }}>
-                <div className="block-left">
-                  <i className="fa fa-bookmark" />
-                  <i className="fa fa-arrow-up" />
-                </div>
-                <div className="block-right">
-                  <div className="avatar-group" style={{ display: "flex" }}>
-                    <div className="avatar">
-                      <img
-                        src={require("./../../assets/img/download (1).jfif")}
-                        alt="avatar"
-                      />
+            {ele.lstTaskDeTail.map((ele) => {
+              const taskId = ele.taskId
+              return (
+                <li
+                  className="list-group-item"
+                  data-toggle="modal"
+                  data-target="#infoModal"
+                  style={{ cursor: "pointer" }}
+                  key={ele.taskName}
+                  onClick={async () => {
+                    const result = await fetchTaskDetailApi(taskId);
+                    dispatch(getTaskDetailAction(result.data.content));
+                  }}
+                >
+                  <h5 className="font-weight-bold text-success mb-3">
+                    {ele.taskName}
+                  </h5>
+                  <div
+                    className="block"
+                    title="Priority"
+                    style={{ display: "flex" }}
+                  >
+                    <div className="block-left">
+                      <p className="text-danger">{ele.priorityTask.priority}</p>
                     </div>
-                    <div className="avatar">
-                      <img
-                        src={require("./../../assets/img/download (2).jfif")}
-                        alt="avatar"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li className="list-group-item">
-              <p>
-                Each issue has a single reporter but can have multiple assignees
-              </p>
-              <div className="block" style={{ display: "flex" }}>
-                <div className="block-left">
-                  <i className="fa fa-check-square" />
-                  <i className="fa fa-arrow-up" />
-                </div>
-                <div className="block-right">
-                  <div className="avatar-group" style={{ display: "flex" }}>
-                    <div className="avatar">
-                      <img
-                        src={require("./../../assets/img/download (1).jfif")}
-                        alt="avatar"
-                      />
-                    </div>
-                    <div className="avatar">
-                      <img
-                        src={require("./../../assets/img/download (2).jfif")}
-                        alt="avatar"
-                      />
+                    <div className="block-right">
+                      <div className="avatar-group" style={{ display: "flex" }}>
+                        {ele.assigness.map((ele) => {
+                          return (
+                            <div className="avatar" key={ele.id}>
+                              <img src={ele.avatar} alt={ele.avatar} />
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            </li>
-            <li className="list-group-item">Vestibulum at eros</li>
+                </li>
+              );
+            })}
           </ul>
         </div>
       );
     });
   };
+
   return (
-    <div className="container">
+    <div className="container p-0">
       <div className="content" style={{ display: "flex" }}>
         {renderCardTaskList()}
       </div>

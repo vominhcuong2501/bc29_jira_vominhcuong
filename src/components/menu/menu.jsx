@@ -25,7 +25,7 @@ export default function Menu() {
               Project management
             </NavLink>
           </li>
-          <li className="nav-item d-flex align-items-center ">
+          {/* <li className="nav-item d-flex align-items-center ">
             <i className="mr-2 fa fa-credit-card" />
             <NavLink
               className="nav-link text-dark"
@@ -34,7 +34,7 @@ export default function Menu() {
             >
               Cyber Board
             </NavLink>
-          </li>
+          </li> */}
           <li className="nav-item d-flex align-items-center ">
             <i className="mr-2 fa fa-cog" />
             <NavLink

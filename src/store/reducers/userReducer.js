@@ -1,5 +1,5 @@
 import { USER_LOGIN_KEY } from "../../constans/common";
-import { GET_USER, SET_USER_INFO } from "../types/userType";
+import { GET_USER, GET_USER_BY_PROJECT, SET_USER_INFO } from "../types/userType";
 
 // store reducer
 let userInfo = localStorage.getItem(USER_LOGIN_KEY);
@@ -10,7 +10,8 @@ if (userInfo) {
 
 const DEFAULT_STATE = {
   userInfo: userInfo,
-  userSearch: []
+  userSearch: [],
+  userByProject: []
 };
 
 export const userReducer = (state = DEFAULT_STATE, { type, payload }) => {
@@ -22,6 +23,10 @@ export const userReducer = (state = DEFAULT_STATE, { type, payload }) => {
     
     case GET_USER: {
       return {...state, userSearch: payload}
+    }
+
+    case GET_USER_BY_PROJECT: {
+      return {...state, userByProject: payload}
     }
     default:
       return { ...state };

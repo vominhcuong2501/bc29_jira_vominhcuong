@@ -162,7 +162,6 @@ export default function TableManagement() {
       ),
   });
 
-  // call api xóa project
   const fetchDeleteProject = async (id) => {
     try {
       await fetchDeleteProjectApi(id);
@@ -178,7 +177,6 @@ export default function TableManagement() {
     }
   };
 
-  // call api thông tin của project và gửi lên reducer cho form edit lấy thông tin
   const fetchProjectEdit = async (id) => {
     const result = await fetchGetProjectDetailApi(id);
     dispatch(getProjectEditAction(result.data.content));
@@ -362,7 +360,6 @@ export default function TableManagement() {
                         setValue(text);
                       }}
                       style={{ width: "100%" }}
-                      // gõ tìm kiếm
                       onSearch={async (keyWord) => {
                         const result = await getUserApi(keyWord);
                         dispatch(getUserAction(result.data.content));
@@ -379,15 +376,6 @@ export default function TableManagement() {
         );
       },
     },
-    // {
-    //   title: "Description",
-    //   dataIndex: "description",
-    //   key: "description",
-    //   render: (text, record, index) => {
-    //     let jsxContent = parse(text);
-    //     return <div>{jsxContent}</div>;
-    //   },
-    // },
     {
       title: "Action",
       dataIndex: "action",

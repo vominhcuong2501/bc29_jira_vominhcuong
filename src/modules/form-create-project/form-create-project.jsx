@@ -7,6 +7,7 @@ import { useAsync } from "../../hooks/useAsync";
 import { Editor } from "@tinymce/tinymce-react";
 import { fetchCreateProjectAuthorizeApi } from "../../services/project";
 
+
 export default function FormCreateProject() {
   const navigate = useNavigate();
   const [form] = Form.useForm();
@@ -52,7 +53,7 @@ export default function FormCreateProject() {
       notification.success({
         description: "Successfully !"
       })
-      navigate("/project-management")
+      navigate("/")
     } catch(err) {
       console.log(err);
       notification.error({
@@ -108,7 +109,7 @@ export default function FormCreateProject() {
           init={{
             height: 200,
             menubar: false,
-
+          
             toolbar:
               "undo redo | formatselect | " +
               "bold italic backcolor | alignleft aligncenter " +

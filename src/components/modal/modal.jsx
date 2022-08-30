@@ -1,9 +1,81 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useAsync } from "../../hooks/useAsync";
+import {
+  fetchGetPriorityApi,
+  fetchGetStatusApi,
+} from "../../services/cyberbugs";
+import parse from 'html-react-parser';
 
-export default function Modal() {
+
+export default function TaskDetailModal() {
+  const { taskDetailModal } = useSelector((state) => state.taskReducer);
+
+  const dispatch = useDispatch();
+
+  const {
+    alias,
+    assigness,
+    description,
+    lstComment,
+    originalEstimate,
+    priorityTask,
+    projectId,
+    statusId,
+    taskId,
+    taskName,
+    taskTypeDetail,
+    timeTrackingRemaining,
+    timeTrackingSpent,
+    typeId,
+  } = taskDetailModal;
+
+  const parse = require("html-react-parser");
+
+  const descriptionHtml = parse(`${description}`);
+
+  const { state: status = [] } = useAsync({
+    service: () => fetchGetStatusApi(),
+  });
+  
+  const { state: priority = [] } = useAsync({
+    service: () => fetchGetPriorityApi(),
+  });
+
+  const renderTimeTracking = () => {
+    const max = Number(timeTrackingSpent) + Number(timeTrackingRemaining)
+    const percent = Math.round(Number(timeTrackingSpent)/max * 100)
+    return (
+      <div style={{ display: "flex" }}>
+        <i className="fa fa-clock" />
+        <div style={{ width: "100%" }}>
+          <div className="progress">
+            <div
+              className="progress-bar"
+              role="progressbar"
+              style={{ width: `${percent}%` }}
+              aria-valuenow={Number(timeTrackingSpent)}
+              aria-valuemin={Number(timeTrackingRemaining)}
+              aria-valuemax={max}
+            />
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <p className="logged">{Number(timeTrackingSpent)}h logged</p>
+            <p className="estimate-time">{Number(timeTrackingRemaining)}h remaining</p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div>
-      <div
+      {/* <div
         className="modal fade"
         id="searchModal"
         tabIndex={-1}
@@ -41,7 +113,7 @@ export default function Modal() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <div
         className="modal fade"
         id="infoModal"
@@ -52,10 +124,11 @@ export default function Modal() {
       >
         <div className="modal-dialog modal-info">
           <div className="modal-content">
-            <div className="modal-header">
+            <div className="modal-header pb-0">
               <div className="task-title">
-                <i className="fa fa-bookmark" />
-                <span>TASK-217871</span>
+                <h5 className="font-weight-bold">
+                  <i className="fa fa-bookmark" /> {taskName}
+                </h5>
               </div>
               <div style={{ display: "flex" }} className="task-click">
                 <div>
@@ -81,59 +154,30 @@ export default function Modal() {
               <div className="container-fluid">
                 <div className="row">
                   <div className="col-8">
-                    <p className="issue">This is an issue of type: Task.</p>
+                    <p className="issue">
+                      This is an issue of type: {taskTypeDetail?.taskType}.
+                    </p>
                     <div className="description">
-                      <p>Description</p>
-                      <p>
-                        Lorem ipsum dolor sit amet consectetur, adipisicing
-                        elit. Esse expedita quis vero tempora error sed
-                        reprehenderit sequi laborum, repellendus quod laudantium
-                        tenetur nobis modi reiciendis sint architecto. Autem
-                        libero quibusdam odit assumenda fugiat? Beatae aliquid
-                        labore vitae obcaecati sapiente asperiores quia amet id
-                        aut, natus quo molestiae quod voluptas, temporibus iusto
-                        laudantium sit tempora sequi. Rem, itaque id, fugit
-                        magnam asperiores voluptas consectetur aliquid vel error
-                        illum, delectus eum eveniet laudantium at repudiandae!
-                      </p>
+                      <h6 className="text-warning font-weight-bold">
+                        {" "}
+                        * Description
+                      </h6>
+                      {descriptionHtml}
                     </div>
-                    <div style={{ fontWeight: 500, marginBottom: 10 }}>
-                      Jira Software (software projects) issue types:
-                    </div>
-                    <div className="title">
-                      <div className="title-item">
-                        <h3>
-                          BUG <i className="fa fa-bug" />
-                        </h3>
-                        <p>
-                          A bug is a problem which impairs or prevents the
-                          function of a product.
-                        </p>
-                      </div>
-                      <div className="title-item">
-                        <h3>
-                          STORY <i className="fa fa-book-reader" />
-                        </h3>
-                        <p>
-                          A user story is the smallest unit of work that needs
-                          to be done.
-                        </p>
-                      </div>
-                      <div className="title-item">
-                        <h3>
-                          TASK <i className="fa fa-tasks" />
-                        </h3>
-                        <p>A task represents work that needs to be done</p>
-                      </div>
-                    </div>
-                    <div className="comment">
-                      <h6>Comment</h6>
+                    <div className="comment mt-3">
+                      <h6 className="text-warning font-weight-bold mb-3">
+                        {" "}
+                        * Comment
+                      </h6>
                       <div
                         className="block-comment"
                         style={{ display: "flex" }}
                       >
                         <div className="avatar">
-                          <img src={require("./../../assets/img/download (1).jfif")} alt="avatar" />
+                          <img
+                            src={require("./../../assets/img/download (1).jfif")}
+                            alt="avatar"
+                          />
                         </div>
                         <div className="input-comment">
                           <input type="text" placeholder="Add a comment ..." />
@@ -164,7 +208,10 @@ export default function Modal() {
                             style={{ display: "flex" }}
                           >
                             <div className="avatar">
-                              <img src={require("./../../assets/img/download (1).jfif")} alt="avatar" />
+                              <img
+                                src={require("./../../assets/img/download (1).jfif")}
+                                alt="avatar"
+                              />
                             </div>
                             <div>
                               <p style={{ marginBottom: 5 }}>
@@ -188,29 +235,50 @@ export default function Modal() {
                   </div>
                   <div className="col-4">
                     <div className="status">
-                      <h6>STATUS</h6>
-                      <select className="custom-select">
-                        <option value={""}>SELECTED FOR DEVELOPMENT</option>
-                        <option value={1}>One</option>
-                        <option value={2}>Two</option>
-                        <option value={3}>Three</option>
+                      <h6 className="text-warning font-weight-bold">
+                        {" "}
+                        * STATUS
+                      </h6>
+                      <select
+                        className="custom-select"
+                        value={statusId}
+                        onChange={(e) => console.log(e)}
+                      >
+                        {status.map((ele, index) => {
+                          return (
+                            <option value={ele.statusId} key={index}>
+                              {ele.statusName}
+                            </option>
+                          );
+                        })}
                       </select>
                     </div>
                     <div className="assignees">
-                      <h6>ASSIGNEES</h6>
-                      <div style={{ display: "flex" }}>
-                        <div style={{ display: "flex" }} className="item">
-                          <div className="avatar">
-                            <img src={require("./../../assets/img/download (1).jfif")} alt="avatar" />
-                          </div>
-                          <p className="name">
-                            Pickle Rick
-                            <i
-                              className="fa fa-times"
-                              style={{ marginLeft: 5 }}
-                            />
-                          </p>
-                        </div>
+                      <h6 className="text-warning font-weight-bold">
+                        {" "}
+                        * ASSIGNEES
+                      </h6>
+                      <div>
+                        {assigness.map((ele, index) => {
+                          return (
+                            <div
+                              style={{ display: "flex", alignItems: "center" }}
+                              className="item"
+                              key={index}
+                            >
+                              <div className="avatar mr-2">
+                                <img src={ele.avatar} alt="avatar" />
+                              </div>
+                              <p className="name">
+                                {ele.name}
+                                <i
+                                  className="fa fa-times"
+                                  style={{ marginLeft: 5 }}
+                                />
+                              </p>
+                            </div>
+                          );
+                        })}
                         <div style={{ display: "flex", alignItems: "center" }}>
                           <i
                             className="fa fa-plus"
@@ -220,60 +288,43 @@ export default function Modal() {
                         </div>
                       </div>
                     </div>
-                    <div className="reporter">
-                      <h6>REPORTER</h6>
-                      <div style={{ display: "flex" }} className="item">
-                        <div className="avatar">
-                          <img src={require("./../../assets/img/download (1).jfif")} alt="avatar" />
-                        </div>
-                        <p className="name">
-                          Pickle Rick
-                          <i
-                            className="fa fa-times"
-                            style={{ marginLeft: 5 }}
-                          />
-                        </p>
-                      </div>
-                    </div>
-                    <div className="priority" style={{ marginBottom: 20 }}>
-                      <h6>PRIORITY</h6>
-                      <select>
-                        <option>Highest</option>
-                        <option>Medium</option>
-                        <option>Low</option>
-                        <option>Lowest</option>
+                    <div className="priority" style={{ margin: "20px 0" }}>
+                      <h6 className="text-warning font-weight-bold">
+                        {" "}
+                        * PRIORITY
+                      </h6>
+                      <select
+                        className="custom-select"
+                        value={priorityTask?.priorityId}
+                        onChange={(e) => console.log(e)}
+                      >
+                        {priority.map((ele, index) => {
+                          return (
+                            <option value={ele.priorityId} key={index}>
+                              {ele.priority}
+                            </option>
+                          );
+                        })}
                       </select>
                     </div>
                     <div className="estimate">
-                      <h6>ORIGINAL ESTIMATE (HOURS)</h6>
-                      <input type="text" className="estimate-hours" />
+                      <h6 className="text-warning font-weight-bold">
+                        {" "}
+                        * ORIGINAL ESTIMATE (HOURS)
+                      </h6>
+                      <input
+                        type="text"
+                        className="estimate-hours"
+                        value={originalEstimate}
+                        onChange={e => console.log(e)}
+                      />
                     </div>
                     <div className="time-tracking">
-                      <h6>TIME TRACKING</h6>
-                      <div style={{ display: "flex" }}>
-                        <i className="fa fa-clock" />
-                        <div style={{ width: "100%" }}>
-                          <div className="progress">
-                            <div
-                              className="progress-bar"
-                              role="progressbar"
-                              style={{ width: "25%" }}
-                              aria-valuenow={25}
-                              aria-valuemin={0}
-                              aria-valuemax={100}
-                            />
-                          </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                            }}
-                          >
-                            <p className="logged">4h logged</p>
-                            <p className="estimate-time">12h estimated</p>
-                          </div>
-                        </div>
-                      </div>
+                      <h6 className="text-warning font-weight-bold">
+                        {" "}
+                        * TIME TRACKING
+                      </h6>
+                      {renderTimeTracking()}
                     </div>
                     <div style={{ color: "#929398" }}>
                       Create at a month ago

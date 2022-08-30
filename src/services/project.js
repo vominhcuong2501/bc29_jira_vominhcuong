@@ -1,8 +1,7 @@
 import axios from "axios"
-import { ACCESS_TOKEN, AUTHORIZATION, BASE_URL } from "../constans/common"
+import { AUTHORIZATION, BASE_URL } from "../constans/common"
 
 export const fetchCreateProjectAuthorizeApi = newProject => {
-    console.log(localStorage.getItem(ACCESS_TOKEN));
     return axios({
         url: `${BASE_URL}/Project/createProjectAuthorize`,
         method: "POST",
@@ -56,10 +55,4 @@ export const assignUserProjectApi = (userProject) => {
 }
 
 
-// export const getUserByProjectApi = (projectId) => {
-//     return axios({
-//         url: `${BASE_URL}/Users/getUserByProjectId?idProject=${projectId}`,
-//         method: "GET",
-//         headers: AUTHORIZATION
-//     })
-// }
+

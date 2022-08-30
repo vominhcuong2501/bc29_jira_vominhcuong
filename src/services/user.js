@@ -26,7 +26,6 @@ export const getUserApi = (keyWord) => {
     })
 }
 
-
 export const removeUserProjectApi = (userDelete) => {
     return axios({
         url: `${BASE_URL}/Project/removeUserFromProject`,
@@ -34,5 +33,13 @@ export const removeUserProjectApi = (userDelete) => {
         data: userDelete,
         headers: AUTHORIZATION
 
+    })
+}
+
+export const getUserByProjectApi = (projectId) => {
+    return axios({
+        url: `${BASE_URL}/Users/getUserByProjectId?idProject=${projectId}`,
+        method: "GET",
+        headers: AUTHORIZATION
     })
 }

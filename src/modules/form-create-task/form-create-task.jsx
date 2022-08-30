@@ -1,5 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Form, Input, Slider, Select, InputNumber } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  Slider,
+  Select,
+  InputNumber,
+  notification,
+} from "antd";
 import { Editor } from "@tinymce/tinymce-react";
 import { useSelector, useDispatch } from "react-redux";
 import { closeEditModalAction } from "../../store/actions/modalEditAction";
@@ -12,22 +20,28 @@ import {
   fetchGetStatusApi,
   fetchGetTaskTypeApi,
 } from "../../services/cyberbugs";
-import { getUserApi } from "../../services/user";
-import { getUserAction } from "../../store/actions/userAction";
+import { getUserByProjectApi } from "../../services/user";
+import { getUserByProjectAction } from "../../store/actions/userAction";
+import { getTaskDetailAction, selectedUserTaskAction } from "../../store/actions/taskAcion";
+import { useNavigate } from "react-router-dom";
+import { fetchCreateTaskApi } from "../../services/task";
 
 const children = [];
 
 export default function FormCreateTask() {
   const [form] = Form.useForm();
 
-
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   const [size, setSize] = useState("middle");
 
   const { arrProject } = useSelector((state) => state.projectReducer);
 
-  const { userSearch } = useSelector((state) => state.userReducer);
+  const { userByProject } = useSelector((state) => state.userReducer);
+
+  const { selectedUser } = useSelector((state) => state.taskReducer);
 
   const editorRef = useRef(null);
 
@@ -55,15 +69,31 @@ export default function FormCreateTask() {
     service: () => fetchGetTaskTypeApi(),
   });
 
-  const userOption = userSearch.map((ele) => {
+  const userOption = userByProject.map((ele) => {
     return { value: ele.userId, label: ele.name };
   });
 
-  console.log(userOption);
+  const handleSubmit = async (values) => {
+    const task = {
+      ...values,
+      description: editorRef.current.getContent(),
+      listUserAsign: selectedUser,
+    };
+    console.log(task);
+    try {
+      await fetchCreateTaskApi(task);
+      navigate("/");
+      dispatch(closeEditModalAction());
+      notification.success({
+        description: "Successfully !",
+      });
+    // dispatch(getTaskDetailAction(task))
 
-  const handleSubmit = (values) => {
-    console.log(values);
-    const project = { ...values, description: editorRef.current.getContent() };
+    } catch (error) {
+      notification.error({
+        message: error.response.data.content,
+      });
+    }
   };
 
   return (
@@ -81,6 +111,7 @@ export default function FormCreateTask() {
           listUserAsign: [],
           timeTrackingSpent: 0,
           timeTrackingRemaining: 0,
+          originalEstimate: 0,
         }}
       >
         <div className="row">
@@ -96,7 +127,13 @@ export default function FormCreateTask() {
                 },
               ]}
             >
-              <Select size="large">
+              <Select
+                size="large"
+                onChange={async (projectId) => {
+                  const result = await getUserByProjectApi(projectId);
+                  dispatch(getUserByProjectAction(result.data.content));
+                }}
+              >
                 {arrProject?.map((ele, index) => {
                   return (
                     <Select.Option value={ele.id} key={index}>
@@ -204,10 +241,10 @@ export default function FormCreateTask() {
               size={size}
               placeholder="Please search user"
               optionFilterProp="label"
-              onSearch={async(keyWord) => {
-                const result = await getUserApi(keyWord);
-                dispatch(getUserAction(result.data.content));
+              onChange={(values) => {
+                dispatch(selectedUserTaskAction(values));
               }}
+              name="listUserAsign"
               options={userOption}
               style={{
                 width: "100%",
@@ -251,58 +288,54 @@ export default function FormCreateTask() {
             </Form.Item>
           </div>
           <div className="col-3 p-0">
-            <span>
-              <i
-                style={{ fontSize: "7px", color: "#f96628" }}
-                className="fas fa-asterisk mr-1"
-              ></i>
-            </span>
-            <span>Time spent</span>
-            <InputNumber
-              onChange={(value) => {
-                setTimeTracking({
-                  ...timeTracking,
-                  timeTrackingSpent: value,
-                });
-              }}
-              type="number"
-              size="large"
-              min={0}
+            <Form.Item
               name="timeTrackingSpent"
+              label="Time spent"
+              validateTrigger={["onChange"]}
               rules={[
                 {
                   required: true,
-                  message: "Please input your task time spent",
+                  message: "Please input your task time spent ",
                 },
               ]}
-            />
+            >
+              <InputNumber
+                type="number"
+                min={0}
+                size="large"
+                onChange={(value) => {
+                  setTimeTracking({
+                    ...timeTracking,
+                    timeTrackingSpent: value,
+                  });
+                }}
+              />
+            </Form.Item>
           </div>
           <div className="col-3 p-0">
-            <span>
-              <i
-                style={{ fontSize: "7px", color: "#f96628" }}
-                className="fas fa-asterisk mr-1"
-              ></i>
-            </span>
-            <span>Time remaining</span>
-            <InputNumber
-              onChange={(value) => {
-                setTimeTracking({
-                  ...timeTracking,
-                  timeTrackingRemaining: value,
-                });
-              }}
-              type="number"
-              size="large"
-              min={0}
+            <Form.Item
               name="timeTrackingRemaining"
+              label="Time remaining"
+              validateTrigger={["onChange"]}
               rules={[
                 {
                   required: true,
-                  message: "Please input your task time tracking remaining",
+                  message: "Please input your task time remaining ",
                 },
               ]}
-            />
+            >
+              <InputNumber
+                type="number"
+                min={0}
+                size="large"
+                onChange={(value) => {
+                  setTimeTracking({
+                    ...timeTracking,
+                    timeTrackingRemaining: value,
+                  });
+                }}
+              />
+            </Form.Item>
           </div>
           <div className="col-12">
             <span>
@@ -313,6 +346,8 @@ export default function FormCreateTask() {
             </span>
             <span>Description</span>
             <Editor
+              onInit={(evt, editor) => (editorRef.current = editor)}
+              initialValue=""
               name="description"
               init={{
                 height: 300,

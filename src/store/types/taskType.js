@@ -1,0 +1,2 @@
+export const SELECTED_USER = "SELECTED_USER"
+export const GET_TASK_DETAIL = "GET_TASK_DETAIL"

@@ -2,7 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import Menu from "../components/menu/menu";
 import Sidebar from "../components/sidebar/sidebar";
-import Modal from "../components/modal/modal"
+import TaskDetailModal from "../components/modal/modal";
 
 
 export default function HomeLayout() {
@@ -11,7 +11,7 @@ export default function HomeLayout() {
         <Sidebar />
         <Menu />
         <Outlet />
-        <Modal />
+        <TaskDetailModal />
       </div>
       
   );
