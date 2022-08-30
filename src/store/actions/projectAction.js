@@ -35,3 +35,5 @@ export const getAllProjectAction = (table) => {
         payload: table
     })
 }
+
+

@@ -4,7 +4,7 @@ const DEFAULT_STATE = {
     projectEdit: {},
     table: [],
     projectDetail: {},
-    arrProject: []
+    arrProject: [],
 };
 
 export const projectReducer = (state = DEFAULT_STATE, { type, payload }) => {
@@ -18,8 +18,8 @@ export const projectReducer = (state = DEFAULT_STATE, { type, payload }) => {
         case UPDATE_TABLE: {
             return { ...state, table: [...payload] }
         }
-
         case GET_PROJECT_DETAIL: {
+            console.log(payload);
             return { ...state, projectDetail: payload }
         }
         case GET_ALL_PROJECT: {

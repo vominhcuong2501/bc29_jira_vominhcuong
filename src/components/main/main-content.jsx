@@ -2,19 +2,11 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { fetchTaskDetailApi } from "../../services/task";
 import { getTaskDetailAction } from "../../store/actions/taskAcion";
-import { notification } from "antd";
 
 export default function MainContent(props) {
   const dispatch = useDispatch();
 
-  const {
-    creator,
-    description,
-    lstTask,
-    members,
-    projectCategory,
-    projectName,
-  } = props.projectDetail;
+  const { lstTask } = props.projectDetail;
 
   const renderCardTaskList = () => {
     return lstTask?.map((ele) => {
@@ -27,7 +19,7 @@ export default function MainContent(props) {
           <div className="card-header">{ele.statusName}</div>
           <ul className="list-group list-group-flush">
             {ele.lstTaskDeTail.map((ele) => {
-              const taskId = ele.taskId
+              
               return (
                 <li
                   className="list-group-item"
@@ -36,7 +28,7 @@ export default function MainContent(props) {
                   style={{ cursor: "pointer" }}
                   key={ele.taskName}
                   onClick={async () => {
-                    const result = await fetchTaskDetailApi(taskId);
+                    const result = await fetchTaskDetailApi(ele.taskId);
                     dispatch(getTaskDetailAction(result.data.content));
                   }}
                 >

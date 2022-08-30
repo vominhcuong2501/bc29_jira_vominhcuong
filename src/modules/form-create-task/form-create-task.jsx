@@ -79,7 +79,6 @@ export default function FormCreateTask() {
       description: editorRef.current.getContent(),
       listUserAsign: selectedUser,
     };
-    console.log(task);
     try {
       await fetchCreateTaskApi(task);
       navigate("/");
@@ -87,8 +86,6 @@ export default function FormCreateTask() {
       notification.success({
         description: "Successfully !",
       });
-    // dispatch(getTaskDetailAction(task))
-
     } catch (error) {
       notification.error({
         message: error.response.data.content,

@@ -5,46 +5,50 @@ import {
   fetchGetPriorityApi,
   fetchGetStatusApi,
 } from "../../services/cyberbugs";
-import parse from 'html-react-parser';
-
+import parse from "html-react-parser";
+import { notification } from "antd";
+import { fetchUpdateStatusApi } from "../../services/task";
+import { useNavigate } from "react-router-dom";
+import { getProjectDetailAction } from "../../store/actions/projectAction";
 
 export default function TaskDetailModal() {
   const { taskDetailModal } = useSelector((state) => state.taskReducer);
 
+  const {projectDetail} = useSelector(state => state.projectReducer)
+
   const dispatch = useDispatch();
 
   const {
-    alias,
     assigness,
     description,
-    lstComment,
     originalEstimate,
     priorityTask,
-    projectId,
     statusId,
-    taskId,
     taskName,
+    taskId,
     taskTypeDetail,
     timeTrackingRemaining,
     timeTrackingSpent,
-    typeId,
+    projectId,
   } = taskDetailModal;
 
   const parse = require("html-react-parser");
 
   const descriptionHtml = parse(`${description}`);
 
+  const navigate = useNavigate();
+
   const { state: status = [] } = useAsync({
     service: () => fetchGetStatusApi(),
   });
-  
+
   const { state: priority = [] } = useAsync({
     service: () => fetchGetPriorityApi(),
   });
 
   const renderTimeTracking = () => {
-    const max = Number(timeTrackingSpent) + Number(timeTrackingRemaining)
-    const percent = Math.round(Number(timeTrackingSpent)/max * 100)
+    const max = Number(timeTrackingSpent) + Number(timeTrackingRemaining);
+    const percent = Math.round((Number(timeTrackingSpent) / max) * 100);
     return (
       <div style={{ display: "flex" }}>
         <i className="fa fa-clock" />
@@ -66,7 +70,9 @@ export default function TaskDetailModal() {
             }}
           >
             <p className="logged">{Number(timeTrackingSpent)}h logged</p>
-            <p className="estimate-time">{Number(timeTrackingRemaining)}h remaining</p>
+            <p className="estimate-time">
+              {Number(timeTrackingRemaining)}h remaining
+            </p>
           </div>
         </div>
       </div>
@@ -145,6 +151,7 @@ export default function TaskDetailModal() {
                   className="close"
                   data-dismiss="modal"
                   aria-label="Close"
+                  id="close"
                 >
                   <span aria-hidden="true">×</span>
                 </button>
@@ -242,7 +249,21 @@ export default function TaskDetailModal() {
                       <select
                         className="custom-select"
                         value={statusId}
-                        onChange={(e) => console.log(e)}
+                        onChange={async (e) => {
+                          try {
+                            await fetchUpdateStatusApi({
+                              taskId: taskId,
+                              statusId: e.target.value,
+                              projectId: projectId,
+                            });
+                            notification.success({
+                              description: "Successfully !",
+                            });
+                            // dispatch(getProjectDetailAction())
+                          } catch (error) {
+                            console.log(error);
+                          }
+                        }}
                       >
                         {status.map((ele, index) => {
                           return (
@@ -259,7 +280,7 @@ export default function TaskDetailModal() {
                         * ASSIGNEES
                       </h6>
                       <div>
-                        {assigness.map((ele, index) => {
+                        {assigness?.map((ele, index) => {
                           return (
                             <div
                               style={{ display: "flex", alignItems: "center" }}
@@ -316,7 +337,7 @@ export default function TaskDetailModal() {
                         type="text"
                         className="estimate-hours"
                         value={originalEstimate}
-                        onChange={e => console.log(e)}
+                        onChange={(e) => console.log(e)}
                       />
                     </div>
                     <div className="time-tracking">
