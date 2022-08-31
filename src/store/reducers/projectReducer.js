@@ -19,7 +19,6 @@ export const projectReducer = (state = DEFAULT_STATE, { type, payload }) => {
             return { ...state, table: [...payload] }
         }
         case GET_PROJECT_DETAIL: {
-            console.log(payload);
             return { ...state, projectDetail: payload }
         }
         case GET_ALL_PROJECT: {

@@ -22,7 +22,7 @@ import {
   fetchGetAllProjectApi,
   fetchGetProjectDetailApi,
 } from "../../services/project";
-import { openFormEditProjectAction } from "../../store/actions/modalEditAction";
+import { openFormEditUserAction } from "../../store/actions/modalEditAction";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import "./table-management.scss";
 import {
@@ -208,7 +208,9 @@ export default function TableManagement() {
       },
       render: (text, record, index) => {
         return (
-          <NavLink className="text-dark" to={`/project-detail/${record.id}`}>{text}</NavLink>
+          <NavLink className="text-dark" to={`/project-detail/${record.id}`}>
+            {text}
+          </NavLink>
         );
       },
     },
@@ -387,8 +389,8 @@ export default function TableManagement() {
             className="text-success"
             style={{ fontSize: 20 }}
             onClick={() => {
-              dispatch(openFormEditProjectAction());
-              fetchProjectEdit(record.id);
+              dispatch(openFormEditUserAction());
+              // fetchProjectEdit(record.id);
             }}
           >
             <EditOutlined />

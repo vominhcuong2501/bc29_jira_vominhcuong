@@ -26,6 +26,15 @@ export const getUserApi = (keyWord) => {
     })
 }
 
+export const getUserListApi = () => {
+    return axios({
+        url: `${BASE_URL}/Users/getUser`,
+        method: "GET",
+        headers: AUTHORIZATION
+
+    })
+}
+
 export const removeUserProjectApi = (userDelete) => {
     return axios({
         url: `${BASE_URL}/Project/removeUserFromProject`,
@@ -41,5 +50,14 @@ export const getUserByProjectApi = (projectId) => {
         url: `${BASE_URL}/Users/getUserByProjectId?idProject=${projectId}`,
         method: "GET",
         headers: AUTHORIZATION
+    })
+}
+
+export const fetchDeleteUserApi = (userId) => {
+    return axios({
+        url: `${BASE_URL}/Users/deleteUser?id=${userId}`,
+        method: "DELETE",
+        headers: AUTHORIZATION
+
     })
 }

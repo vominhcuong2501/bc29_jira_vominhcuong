@@ -7,16 +7,13 @@ import {
 } from "../../services/cyberbugs";
 import parse from "html-react-parser";
 import { notification } from "antd";
-import { fetchUpdateStatusApi } from "../../services/task";
+import { fetchUpdateEstimateApi, fetchUpdatePriorityApi, fetchUpdateStatusApi } from "../../services/task";
 import { useNavigate } from "react-router-dom";
+import { fetchGetProjectDetailApi } from "../../services/project";
 import { getProjectDetailAction } from "../../store/actions/projectAction";
 
 export default function TaskDetailModal() {
   const { taskDetailModal } = useSelector((state) => state.taskReducer);
-
-  const {projectDetail} = useSelector(state => state.projectReducer)
-
-  const dispatch = useDispatch();
 
   const {
     assigness,
@@ -32,11 +29,14 @@ export default function TaskDetailModal() {
     projectId,
   } = taskDetailModal;
 
-  const parse = require("html-react-parser");
+  console.log(taskDetailModal);
+  // const parse = require("html-react-parser");
 
   const descriptionHtml = parse(`${description}`);
 
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   const { state: status = [] } = useAsync({
     service: () => fetchGetStatusApi(),
@@ -45,6 +45,12 @@ export default function TaskDetailModal() {
   const { state: priority = [] } = useAsync({
     service: () => fetchGetPriorityApi(),
   });
+
+  const setProjectDetail = async () => {
+    const result = await fetchGetProjectDetailApi(projectId);
+    dispatch(getProjectDetailAction(result.data.content));
+    console.log(result.data.content);
+  };
 
   const renderTimeTracking = () => {
     const max = Number(timeTrackingSpent) + Number(timeTrackingRemaining);
@@ -243,7 +249,6 @@ export default function TaskDetailModal() {
                   <div className="col-4">
                     <div className="status">
                       <h6 className="text-warning font-weight-bold">
-                        {" "}
                         * STATUS
                       </h6>
                       <select
@@ -254,14 +259,15 @@ export default function TaskDetailModal() {
                             await fetchUpdateStatusApi({
                               taskId: taskId,
                               statusId: e.target.value,
-                              projectId: projectId,
                             });
                             notification.success({
                               description: "Successfully !",
                             });
-                            // dispatch(getProjectDetailAction())
+                            setProjectDetail()
                           } catch (error) {
-                            console.log(error);
+                            notification.error({
+                              message: error.response.data.content,
+                            });
                           }
                         }}
                       >
@@ -276,7 +282,6 @@ export default function TaskDetailModal() {
                     </div>
                     <div className="assignees">
                       <h6 className="text-warning font-weight-bold">
-                        {" "}
                         * ASSIGNEES
                       </h6>
                       <div>
@@ -311,13 +316,28 @@ export default function TaskDetailModal() {
                     </div>
                     <div className="priority" style={{ margin: "20px 0" }}>
                       <h6 className="text-warning font-weight-bold">
-                        {" "}
                         * PRIORITY
                       </h6>
                       <select
                         className="custom-select"
                         value={priorityTask?.priorityId}
-                        onChange={(e) => console.log(e)}
+                        onChange={async (e) => {
+                          try {
+                            await fetchUpdatePriorityApi({
+                              taskId: taskId,
+                              priorityId: e.target.value,
+                            });
+                            notification.success({
+                              description: "Successfully !",
+                            });
+                            setProjectDetail()
+                          } catch (error) {
+                            console.log(error);
+                            notification.error({
+                              message: error.response.data.content,
+                            });
+                          }
+                        }}
                       >
                         {priority.map((ele, index) => {
                           return (
@@ -330,19 +350,32 @@ export default function TaskDetailModal() {
                     </div>
                     <div className="estimate">
                       <h6 className="text-warning font-weight-bold">
-                        {" "}
                         * ORIGINAL ESTIMATE (HOURS)
                       </h6>
                       <input
                         type="text"
                         className="estimate-hours"
                         value={originalEstimate}
-                        onChange={(e) => console.log(e)}
+                        onChange={async (e) => {
+                          try {
+                            await fetchUpdateEstimateApi({
+                              taskId: taskId,
+                              originalEstimate: e.target.value,
+                            });
+                            notification.success({
+                              description: "Successfully !",
+                            });
+                            setProjectDetail()
+                          } catch (error) {
+                            notification.error({
+                              message: error.response.data.content,
+                            });
+                          }
+                        }}
                       />
                     </div>
                     <div className="time-tracking">
                       <h6 className="text-warning font-weight-bold">
-                        {" "}
                         * TIME TRACKING
                       </h6>
                       {renderTimeTracking()}

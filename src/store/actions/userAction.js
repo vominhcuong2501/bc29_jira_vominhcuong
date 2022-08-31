@@ -1,4 +1,4 @@
-import { GET_USER, GET_USER_BY_PROJECT, SET_USER_INFO } from "../types/userType";
+import { GET_USER, GET_USER_BY_PROJECT, GET_USER_LIST, SET_USER_INFO } from "../types/userType";
 
 export const signinAction = (values) => {
     return {
@@ -10,6 +10,13 @@ export const signinAction = (values) => {
 export const getUserAction = (data) => {
     return {
         type: GET_USER,
+        payload: data
+    }
+} 
+
+export const getUserListAction = (data) => {
+    return {
+        type: GET_USER_LIST,
         payload: data
     }
 } 

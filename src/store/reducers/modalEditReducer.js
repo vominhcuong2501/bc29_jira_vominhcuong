@@ -1,4 +1,4 @@
-import { CLOSE_MODAL_EDIT, OPEN_FORM_CREATE_TASK, OPEN_FORM_EDIT_PROJECT } from "../types/modalEditTypes";
+import { CLOSE_MODAL_EDIT, OPEN_FORM_CREATE_TASK, OPEN_FORM_EDIT_PROJECT, OPEN_FORM_EDIT_USER } from "../types/modalEditTypes";
 
 const DEFAULT_STATE = {
     visible: false,
@@ -16,6 +16,9 @@ export const modalEditProjectReducer = (state = DEFAULT_STATE, action) => {
             return { ...state, visible: true, componentModalContent: action.Component, title: action.title }
         }
         case OPEN_FORM_CREATE_TASK: {
+            return { ...state, visible: true, componentModalContent: action.Component, title: action.title }
+        }
+        case OPEN_FORM_EDIT_USER: {
             return { ...state, visible: true, componentModalContent: action.Component, title: action.title }
         }
         default:

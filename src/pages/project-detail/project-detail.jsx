@@ -26,9 +26,7 @@ export default function ProjectDetail() {
       const result = await fetchGetProjectDetailApi(params.projectId);
       dispatch(getProjectDetailAction(result.data.content));
     } catch (error) {
-      notification.error({
-        message: error.response.data.content,
-      });
+      console.log(error);
     }
   };
 
