@@ -1,4 +1,4 @@
-import { GET_USER, GET_USER_BY_PROJECT, GET_USER_LIST, SET_USER_INFO } from "../types/userType";
+import { EDIT_USER, GET_USER, GET_USER_BY_PROJECT, GET_USER_LIST, SET_USER_INFO } from "../types/userType";
 
 export const signinAction = (values) => {
     return {
@@ -25,5 +25,12 @@ export const getUserByProjectAction = (data) => {
     return {
         type: GET_USER_BY_PROJECT,
         payload: data
+    }
+}
+
+export const setUserEditAction = (userEdit) => {
+    return {
+        type: EDIT_USER,
+        payload: userEdit
     }
 }

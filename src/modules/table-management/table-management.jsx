@@ -22,7 +22,7 @@ import {
   fetchGetAllProjectApi,
   fetchGetProjectDetailApi,
 } from "../../services/project";
-import { openFormEditUserAction } from "../../store/actions/modalEditAction";
+import { openFormEditProjectAction, openFormEditUserAction } from "../../store/actions/modalEditAction";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import "./table-management.scss";
 import {
@@ -389,8 +389,8 @@ export default function TableManagement() {
             className="text-success"
             style={{ fontSize: 20 }}
             onClick={() => {
-              dispatch(openFormEditUserAction());
-              // fetchProjectEdit(record.id);
+              dispatch(openFormEditProjectAction());
+              fetchProjectEdit(record.id);
             }}
           >
             <EditOutlined />

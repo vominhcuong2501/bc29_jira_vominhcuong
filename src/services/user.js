@@ -35,6 +35,15 @@ export const getUserListApi = () => {
     })
 }
 
+export const getUserDetailApi = (id) => {
+    return axios({
+        url: `${BASE_URL}/Users/getUser?id=${id}`,
+        method: "GET",
+        headers: AUTHORIZATION
+
+    })
+}
+
 export const removeUserProjectApi = (userDelete) => {
     return axios({
         url: `${BASE_URL}/Project/removeUserFromProject`,
@@ -59,5 +68,13 @@ export const fetchDeleteUserApi = (userId) => {
         method: "DELETE",
         headers: AUTHORIZATION
 
+    })
+}
+
+export const fetchUpdateUserApi = (userUpdate) => {
+    return axios({
+        url: `${BASE_URL}/Users/editUser`,
+        method: "PUT",
+        data: userUpdate
     })
 }

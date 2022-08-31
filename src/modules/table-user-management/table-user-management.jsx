@@ -8,20 +8,19 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import { fetchDeleteUserApi, getUserListApi } from "../../services/user";
-import { getUserListAction } from "../../store/actions/userAction";
+import {
+  getUserListAction,
+  setUserEditAction,
+} from "../../store/actions/userAction";
 import { LoadingContext } from "../../contexts/loading.context";
-import { NavLink, useNavigate } from "react-router-dom";
 import "./table-user-management.scss";
-import { openFormEditProjectAction, openFormEditUserAction } from "../../store/actions/modalEditAction";
+import { openFormEditUserAction } from "../../store/actions/modalEditAction";
 
 export default function TableManagement() {
-  const [value, setValue] = useState();
 
   const dispatch = useDispatch();
 
   const { arrUser } = useSelector((state) => state.userReducer);
-
-  const { userSearch } = useSelector((state) => state.userReducer);
 
   const [loadingState, setLoadingState] = useContext(LoadingContext);
 
@@ -157,10 +156,11 @@ export default function TableManagement() {
     }
   };
 
-  // const fetchProjectEdit = async (id) => {
-  //   const result = await fetchGetProjectDetailApi(id);
-  //   dispatch(getProjectEditAction(result.data.content));
-  // };
+  const fetchUserEdit = (userId) => {
+    const arrUserEdit = [...arrUser];
+    const index = arrUserEdit.findIndex((user) => userId === user.userId);
+    dispatch(setUserEditAction(arrUserEdit[index]));
+  };
 
   const columns = [
     {
@@ -220,7 +220,7 @@ export default function TableManagement() {
             style={{ fontSize: 20 }}
             onClick={() => {
               dispatch(openFormEditUserAction());
-              // fetchProjectEdit(record.id);
+              fetchUserEdit(record.userId);
             }}
           >
             <EditOutlined />
