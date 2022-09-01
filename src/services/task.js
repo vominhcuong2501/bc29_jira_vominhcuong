@@ -64,3 +64,22 @@ export const fetchUpdateEstimateApi = (estimate) => {
 
     })
 }
+
+export const fetchUpdateTaskDetail = (data) => {
+    return axios({
+        url: `${BASE_URL}/Project/updateTask`,
+        method: "PUT",
+        data: data,
+        headers: AUTHORIZATION
+
+    })
+}
+
+export const fetchRemoveTaskApi = (taskId) => {
+    return axios({
+        url: `${BASE_URL}/Project/removeTask?taskId=${taskId}`,
+        method: "DELETE",
+        headers: AUTHORIZATION
+
+    })
+}

@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { fetchTaskDetailApi } from "../../services/task";
-import { getTaskDetailAction } from "../../store/actions/taskAcion";
+import { getTaskDetailAction } from "../../store/actions/taskAction";
 
 export default function MainContent(props) {
   const dispatch = useDispatch();

@@ -279,6 +279,10 @@ body {
   color: #62a0ce;
 }
 
+.fa-exclamation-circle {
+  color: red
+}
+
 /* Modal */
 .modal-search {
   margin: 0px !important;

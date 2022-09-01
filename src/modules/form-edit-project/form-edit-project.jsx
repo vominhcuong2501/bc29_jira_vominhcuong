@@ -10,9 +10,8 @@ import { fetchUpdateProjectApi } from "../../services/project";
 import { closeEditModalAction } from "../../store/actions/modalEditAction";
 import { setTableAction } from "../../store/actions/projectAction";
 
-export default function FormEditProject(props) {
+export default function FormEditProject() {
   const [form] = Form.useForm();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { projectEdit, table } = useSelector((state) => state.projectReducer);
   const { state: arrProject = [] } = useAsync({

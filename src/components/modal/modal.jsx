@@ -1,40 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useAsync } from "../../hooks/useAsync";
 import {
   fetchGetPriorityApi,
   fetchGetStatusApi,
+  fetchGetTaskTypeApi,
 } from "../../services/cyberbugs";
 import parse from "html-react-parser";
-import { notification } from "antd";
-import { fetchUpdateEstimateApi, fetchUpdatePriorityApi, fetchUpdateStatusApi } from "../../services/task";
-import { useNavigate } from "react-router-dom";
+import {
+  changeAssignessModal,
+  changeTaskModal,
+  removeUserAssignessAction,
+} from "../../store/actions/taskAction";
+import { Editor } from "@tinymce/tinymce-react";
+import { CHANGE_TASK_MODAL } from "../../store/types/taskType";
 import { fetchGetProjectDetailApi } from "../../services/project";
 import { getProjectDetailAction } from "../../store/actions/projectAction";
+import { Select, notification } from "antd";
+import { fetchRemoveTaskApi } from "../../services/task";
+const { Option } = Select;
 
 export default function TaskDetailModal() {
   const { taskDetailModal } = useSelector((state) => state.taskReducer);
+  const { projectDetail } = useSelector((state) => state.projectReducer);
 
-  const {
-    assigness,
-    description,
-    originalEstimate,
-    priorityTask,
-    statusId,
-    taskName,
-    taskId,
-    taskTypeDetail,
-    timeTrackingRemaining,
-    timeTrackingSpent,
-    projectId,
-  } = taskDetailModal;
-
-  console.log(taskDetailModal);
-  // const parse = require("html-react-parser");
-
-  const descriptionHtml = parse(`${description}`);
-
-  const navigate = useNavigate();
+  console.log(projectDetail);
+  // set dữ liệu cho desciption
+  const [visibleEditor, setVisibleEditor] = useState(false);
+  const [contentDes, setContentDes] = useState(taskDetailModal.description);
+  const [historyDes, setHistoryDes] = useState(taskDetailModal.description);
 
   const dispatch = useDispatch();
 
@@ -46,48 +40,155 @@ export default function TaskDetailModal() {
     service: () => fetchGetPriorityApi(),
   });
 
+  const { state: taskType = [] } = useAsync({
+    service: () => fetchGetTaskTypeApi(),
+  });
+
   const setProjectDetail = async () => {
-    const result = await fetchGetProjectDetailApi(projectId);
+    const result = await fetchGetProjectDetailApi(taskDetailModal.projectId);
     dispatch(getProjectDetailAction(result.data.content));
     console.log(result.data.content);
   };
 
   const renderTimeTracking = () => {
-    const max = Number(timeTrackingSpent) + Number(timeTrackingRemaining);
-    const percent = Math.round((Number(timeTrackingSpent) / max) * 100);
+    const max =
+      Number(taskDetailModal.timeTrackingSpent) +
+      Number(taskDetailModal.timeTrackingRemaining);
+    const percent = Math.round(
+      (Number(taskDetailModal.timeTrackingSpent) / max) * 100
+    );
     return (
-      <div style={{ display: "flex" }}>
-        <i className="fa fa-clock" />
-        <div style={{ width: "100%" }}>
-          <div className="progress">
+      <div>
+        <div style={{ display: "flex" }}>
+          <i className="fa fa-clock" />
+          <div style={{ width: "100%" }}>
+            <div className="progress">
+              <div
+                className="progress-bar"
+                role="progressbar"
+                style={{ width: `${percent}%` }}
+                aria-valuenow={Number(taskDetailModal.timeTrackingSpent)}
+                aria-valuemin={Number(taskDetailModal.timeTrackingRemaining)}
+                aria-valuemax={max}
+              />
+            </div>
             <div
-              className="progress-bar"
-              role="progressbar"
-              style={{ width: `${percent}%` }}
-              aria-valuenow={Number(timeTrackingSpent)}
-              aria-valuemin={Number(timeTrackingRemaining)}
-              aria-valuemax={max}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <p className="logged">
+                {Number(taskDetailModal.timeTrackingSpent)}h logged
+              </p>
+              <p className="estimate-time">
+                {Number(taskDetailModal.timeTrackingRemaining)}h remaining
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-6">
+            <input
+              type="number"
+              min={0}
+              className="form-control"
+              name="timeTrackingSpent"
+              value={taskDetailModal.timeTrackingSpent}
+              onChange={handleChange}
             />
           </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <p className="logged">{Number(timeTrackingSpent)}h logged</p>
-            <p className="estimate-time">
-              {Number(timeTrackingRemaining)}h remaining
-            </p>
+          <div className="col-6">
+            <input
+              type="number"
+              min={0}
+              className="form-control"
+              name="timeTrackingRemaining"
+              value={taskDetailModal.timeTrackingRemaining}
+              onChange={handleChange}
+            />
           </div>
         </div>
       </div>
     );
   };
 
+  const renderDesciption = () => {
+    const jsxDescription = parse(taskDetailModal.description);
+    return (
+      <div>
+        {visibleEditor ? (
+          <div>
+            <Editor
+              initialValue={taskDetailModal.description}
+              name="description"
+              init={{
+                height: 300,
+                menubar: false,
+                toolbar:
+                  "undo redo | formatselect | " +
+                  "bold italic backcolor | alignleft aligncenter " +
+                  "alignright alignjustify | bullist numlist outdent indent | " +
+                  "removeformat | help",
+                content_style:
+                  "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+              }}
+              onEditorChange={(content, editor) => {
+                setContentDes(content);
+              }}
+            />
+            <div className="my-3">
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  dispatch({
+                    type: CHANGE_TASK_MODAL,
+                    name: "description",
+                    value: contentDes,
+                  });
+                  setVisibleEditor(false);
+                }}
+              >
+                SAVE
+              </button>
+              <button
+                className="btn btn-outline-danger ml-2"
+                onClick={() => {
+                  dispatch({
+                    type: CHANGE_TASK_MODAL,
+                    name: "description",
+                    value: historyDes,
+                  });
+                  setVisibleEditor(false);
+                }}
+              >
+                CLOSE
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div
+            onClick={() => {
+              setVisibleEditor(!visibleEditor);
+              setHistoryDes(taskDetailModal.description);
+            }}
+          >
+            {jsxDescription}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const handleChange = (e) => {
+    const { value, name } = e.target;
+    dispatch(changeTaskModal(value, name));
+    setProjectDetail();
+  };
+
   return (
     <div>
-      {/* <div
+      <div
         className="modal fade"
         id="searchModal"
         tabIndex={-1}
@@ -125,7 +226,7 @@ export default function TaskDetailModal() {
             </div>
           </div>
         </div>
-      </div> */}
+      </div>
       <div
         className="modal fade"
         id="infoModal"
@@ -137,21 +238,52 @@ export default function TaskDetailModal() {
         <div className="modal-dialog modal-info">
           <div className="modal-content">
             <div className="modal-header pb-0">
-              <div className="task-title">
-                <h5 className="font-weight-bold">
-                  <i className="fa fa-bookmark" /> {taskName}
-                </h5>
+              <div className="task-title d-flex align-items-center">
+                <p className="mr-2 text-warning font-weight-bold mb-0">
+                  <i className="fas fa-bookmark"></i>
+                </p>
+                <select
+                  className="custom-select"
+                  name="typeId"
+                  value={taskDetailModal.typeId}
+                  onChange={handleChange}
+                >
+                  {taskType.map((ele, index) => {
+                    return (
+                      <option value={ele.id} key={index}>
+                        {ele.taskType}
+                      </option>
+                    );
+                  })}
+                </select>
               </div>
               <div style={{ display: "flex" }} className="task-click">
                 <div>
-                  <i className="fab fa-telegram-plane" />
+                  <i className="fab fa-telegram-plane mr-2" />
                   <span style={{ paddingRight: 20 }}>Give feedback</span>
                 </div>
                 <div>
-                  <i className="fa fa-link" />
+                  <i className="fa fa-link mr-2" />
                   <span style={{ paddingRight: 20 }}>Copy link</span>
                 </div>
-                <i className="fa fa-trash-alt" style={{ cursor: "pointer" }} />
+                <i
+                  className="fa fa-trash-alt"
+                  style={{ cursor: "pointer" }}
+                  onClick={async () => {
+                    try {
+                      await fetchRemoveTaskApi(taskDetailModal.taskId);
+                      notification.success({
+                        description: "Successfully !",
+                      });
+                      setProjectDetail()
+                      document.querySelectorAll("#close").onClick = true
+                    } catch (err) {
+                      notification.error({
+                        message: err.response.data.content,
+                      });
+                    }
+                  }}
+                />
                 <button
                   type="button"
                   className="close"
@@ -167,20 +299,18 @@ export default function TaskDetailModal() {
               <div className="container-fluid">
                 <div className="row">
                   <div className="col-8">
-                    <p className="issue">
-                      This is an issue of type: {taskTypeDetail?.taskType}.
-                    </p>
+                    <h3 className="font-weight-bold mt-3 mb-4">
+                      {taskDetailModal.taskName}
+                    </h3>
                     <div className="description">
                       <h6 className="text-warning font-weight-bold">
-                        {" "}
-                        * Description
+                        Description
                       </h6>
-                      {descriptionHtml}
+                      {renderDesciption()}
                     </div>
                     <div className="comment mt-3">
                       <h6 className="text-warning font-weight-bold mb-3">
-                        {" "}
-                        * Comment
+                        Comment
                       </h6>
                       <div
                         className="block-comment"
@@ -248,28 +378,31 @@ export default function TaskDetailModal() {
                   </div>
                   <div className="col-4">
                     <div className="status">
-                      <h6 className="text-warning font-weight-bold">
-                        * STATUS
-                      </h6>
+                      <h6 className="text-warning font-weight-bold">STATUS</h6>
                       <select
                         className="custom-select"
-                        value={statusId}
-                        onChange={async (e) => {
-                          try {
-                            await fetchUpdateStatusApi({
-                              taskId: taskId,
-                              statusId: e.target.value,
-                            });
-                            notification.success({
-                              description: "Successfully !",
-                            });
-                            setProjectDetail()
-                          } catch (error) {
-                            notification.error({
-                              message: error.response.data.content,
-                            });
-                          }
-                        }}
+                        name="statusId"
+                        value={taskDetailModal.statusId}
+                        onChange={
+                          handleChange
+                          // async (e) => {
+                          //   try {
+                          //     await fetchUpdatePriorityApi({
+                          //       taskId: taskId,
+                          //       priorityId: e.target.value,
+                          //     });
+                          //     notification.success({
+                          //       description: "Successfully !",
+                          //     });
+                          //     setProjectDetail();
+                          //   } catch (error) {
+                          //     console.log(error);
+                          //     notification.error({
+                          //       message: error.response.data.content,
+                          //     });
+                          //   }
+                          // }
+                        }
                       >
                         {status.map((ele, index) => {
                           return (
@@ -282,14 +415,14 @@ export default function TaskDetailModal() {
                     </div>
                     <div className="assignees">
                       <h6 className="text-warning font-weight-bold">
-                        * ASSIGNEES
+                        ASSIGNEES
                       </h6>
                       <div>
-                        {assigness?.map((ele, index) => {
+                        {taskDetailModal.assigness?.map((ele, index) => {
                           return (
                             <div
-                              style={{ display: "flex", alignItems: "center" }}
-                              className="item"
+                              className="item d-flex align-items-center my-1 mr-0"
+                              style={{ width: "auto" }}
                               key={index}
                             >
                               <div className="avatar mr-2">
@@ -299,45 +432,60 @@ export default function TaskDetailModal() {
                                 {ele.name}
                                 <i
                                   className="fa fa-times"
-                                  style={{ marginLeft: 5 }}
+                                  style={{ marginLeft: 5, cursor: "pointer" }}
+                                  onClick={() => {
+                                    dispatch(removeUserAssignessAction(ele.id));
+                                  }}
                                 />
                               </p>
                             </div>
                           );
                         })}
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                          <i
-                            className="fa fa-plus"
-                            style={{ marginRight: 5 }}
-                          />
-                          <span>Add more</span>
+                        <div className="text-primary mt-2">
+                          <Select
+                            style={{ width: "100%" }}
+                            optionFilterProp="label"
+                            value="+ Add more"
+                            options={projectDetail.members
+                              ?.filter((user) => {
+                                let index =
+                                  taskDetailModal.assigness?.findIndex(
+                                    (mem) => mem.id === user.userId
+                                  );
+                                if (index !== -1) {
+                                  return false;
+                                }
+                                return true;
+                              })
+                              .map((user, index) => {
+                                return { value: user.userId, label: user.name };
+                              })}
+                            onSelect={(value) => {
+                              if (value === "0") {
+                                return;
+                              }
+                              let userSelected = projectDetail.members?.find(
+                                (mem) => mem.userId == value
+                              );
+                              userSelected = {
+                                ...userSelected,
+                                id: userSelected.userId,
+                              };
+                              dispatch(changeAssignessModal(userSelected));
+                            }}
+                          ></Select>
                         </div>
                       </div>
                     </div>
                     <div className="priority" style={{ margin: "20px 0" }}>
                       <h6 className="text-warning font-weight-bold">
-                        * PRIORITY
+                        PRIORITY
                       </h6>
                       <select
                         className="custom-select"
-                        value={priorityTask?.priorityId}
-                        onChange={async (e) => {
-                          try {
-                            await fetchUpdatePriorityApi({
-                              taskId: taskId,
-                              priorityId: e.target.value,
-                            });
-                            notification.success({
-                              description: "Successfully !",
-                            });
-                            setProjectDetail()
-                          } catch (error) {
-                            console.log(error);
-                            notification.error({
-                              message: error.response.data.content,
-                            });
-                          }
-                        }}
+                        value={taskDetailModal.priorityId}
+                        onChange={handleChange}
+                        name="priorityId"
                       >
                         {priority.map((ele, index) => {
                           return (
@@ -350,33 +498,20 @@ export default function TaskDetailModal() {
                     </div>
                     <div className="estimate">
                       <h6 className="text-warning font-weight-bold">
-                        * ORIGINAL ESTIMATE (HOURS)
+                        ORIGINAL ESTIMATE (HOURS)
                       </h6>
                       <input
-                        type="text"
+                        type="number"
                         className="estimate-hours"
-                        value={originalEstimate}
-                        onChange={async (e) => {
-                          try {
-                            await fetchUpdateEstimateApi({
-                              taskId: taskId,
-                              originalEstimate: e.target.value,
-                            });
-                            notification.success({
-                              description: "Successfully !",
-                            });
-                            setProjectDetail()
-                          } catch (error) {
-                            notification.error({
-                              message: error.response.data.content,
-                            });
-                          }
-                        }}
+                        value={taskDetailModal.originalEstimate}
+                        onChange={handleChange}
+                        name="originalEstimate"
+                        min={0}
                       />
                     </div>
                     <div className="time-tracking">
                       <h6 className="text-warning font-weight-bold">
-                        * TIME TRACKING
+                        TIME TRACKING
                       </h6>
                       {renderTimeTracking()}
                     </div>

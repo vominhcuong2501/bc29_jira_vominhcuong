@@ -1,4 +1,4 @@
-import { GET_TASK_DETAIL, SELECTED_USER } from "../types/taskType"
+import { CHANGE_ASSIGNESS, CHANGE_TASK_MODAL, GET_TASK_DETAIL, REMOVE_USER, SELECTED_USER } from "../types/taskType"
 const DEFAULT_STATE = {
     selectedUser: [],
     taskDetailModal: {
@@ -31,7 +31,7 @@ const DEFAULT_STATE = {
             }
         ],
         "lstComment": [],
-        "taskId": 5424,
+        "taskId": 5445,
         "taskName": "fix css",
         "alias": "fix-css",
         "description": "1231231231",
@@ -45,14 +45,30 @@ const DEFAULT_STATE = {
     }
 };
 
-export const taskReducer = (state = DEFAULT_STATE, { type, payload }) => {
-    switch (type) {
+export const taskReducer = (state = DEFAULT_STATE, action) => {
+    switch (action.type) {
         case SELECTED_USER: {
-            return { ...state, selectedUser: payload }
+            return { ...state, selectedUser: action.payload }
         }
 
         case GET_TASK_DETAIL: {
-            return { ...state, taskDetailModal: payload }
+            return { ...state, taskDetailModal: action.payload }
+        }
+
+        case CHANGE_TASK_MODAL: {
+            const {name, value} = action
+            console.log(action);
+            return {...state, taskDetailModal: {...state.taskDetailModal, [name]: value}}
+        }
+
+        case CHANGE_ASSIGNESS: {
+            state.taskDetailModal.assigness = [...state.taskDetailModal.assigness, action.payload]
+            return {...state}
+        }
+
+        case REMOVE_USER: {
+            state.taskDetailModal.assigness = [...state.taskDetailModal.assigness.filter(user => action.payload != user.id)]
+            return {...state}
         }
         default:
             return { ...state };
