@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import { useRoutes } from "react-router-dom";
+import DemoDragdrop from "../pages/demo-dragdrop/demo-dragdrop";
 const HomeLayout = lazy(() => import("../layouts/home"))
 const Login = lazy(() => import("../pages/login/login"))
 const Register = lazy(() => import("../pages/register/register"))
@@ -36,6 +37,10 @@ export default function Router() {
                         {
                             path: "/user-management",
                             element: <UserManagement />,
+                        },
+                        {
+                            path: "/demo",
+                            element: <DemoDragdrop />,
                         },
                         
                     ]

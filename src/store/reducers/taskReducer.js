@@ -11,24 +11,7 @@ const DEFAULT_STATE = {
             "taskType": "bug"
         },
         "assigness": [
-            {
-                "id": 2093,
-                "avatar": "https://ui-avatars.com/api/?name=Huynh Quoc Khanh",
-                "name": "Huynh Quoc Khanh",
-                "alias": "huynh-quoc-khanh"
-            },
-            {
-                "id": 2013,
-                "avatar": "https://ui-avatars.com/api/?name=Mạch Ngọc Đức Anh",
-                "name": "Mạch Ngọc Đức Anh",
-                "alias": "mach-ngoc-duc-anh"
-            },
-            {
-                "id": 2078,
-                "avatar": "https://ui-avatars.com/api/?name=Carrie Le",
-                "name": "Carrie Le",
-                "alias": "carrie-le"
-            }
+            
         ],
         "lstComment": [],
         "taskId": 5445,
@@ -57,19 +40,10 @@ export const taskReducer = (state = DEFAULT_STATE, action) => {
 
         case CHANGE_TASK_MODAL: {
             const {name, value} = action
-            console.log(action);
+            console.log(name, value);
             return {...state, taskDetailModal: {...state.taskDetailModal, [name]: value}}
         }
 
-        case CHANGE_ASSIGNESS: {
-            state.taskDetailModal.assigness = [...state.taskDetailModal.assigness, action.payload]
-            return {...state}
-        }
-
-        case REMOVE_USER: {
-            state.taskDetailModal.assigness = [...state.taskDetailModal.assigness.filter(user => action.payload != user.id)]
-            return {...state}
-        }
         default:
             return { ...state };
     }

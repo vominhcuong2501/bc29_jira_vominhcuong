@@ -1,4 +1,4 @@
-import { CHANGE_ASSIGNESS, CHANGE_TASK_MODAL, GET_TASK_DETAIL, REMOVE_USER, SELECTED_USER } from "../types/taskType"
+import { CHANGE_TASK_MODAL, GET_TASK_DETAIL, SELECTED_USER } from "../types/taskType"
 
 
 
@@ -24,16 +24,3 @@ export const changeTaskModal = (value, name) => {
     })
 }
 
-export const changeAssignessModal = (userSelected) => {
-    return ({
-        type: CHANGE_ASSIGNESS,
-        payload: userSelected
-    })
-}
-
-export const removeUserAssignessAction = (userId) => {
-    return ({
-        type: REMOVE_USER,
-        payload: userId
-    })
-}

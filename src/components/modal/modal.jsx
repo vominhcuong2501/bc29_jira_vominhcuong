@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useAsync } from "../../hooks/useAsync";
 import {
@@ -8,42 +8,67 @@ import {
 } from "../../services/cyberbugs";
 import parse from "html-react-parser";
 import {
-  changeAssignessModal,
   changeTaskModal,
-  removeUserAssignessAction,
+  selectedUserTaskAction,
 } from "../../store/actions/taskAction";
 import { Editor } from "@tinymce/tinymce-react";
 import { CHANGE_TASK_MODAL } from "../../store/types/taskType";
 import { fetchGetProjectDetailApi } from "../../services/project";
 import { getProjectDetailAction } from "../../store/actions/projectAction";
 import { Select, notification } from "antd";
-import { fetchRemoveTaskApi } from "../../services/task";
+import {
+  fetchRemoveTaskApi,
+  fetchUpdateDesciptionApi,
+  fetchUpdateEstimateApi,
+  fetchUpdatePriorityApi,
+  fetchUpdateStatusApi,
+  fetchUpdateTaskDetailApi,
+  fetchUpdateTimeTrackingApi,
+} from "../../services/task";
 const { Option } = Select;
 
 export default function TaskDetailModal() {
+  const dispatch = useDispatch();
+
   const { taskDetailModal } = useSelector((state) => state.taskReducer);
+
+  const [visibleEditor, setVisibleEditor] = useState(false);
+
+  const [visibleTaskName, setVisibleTaskName] = useState(false);
+
+  const [content, setContent] = useState(taskDetailModal.description);
+
+  const [taskName, setTaskName] = useState();
+
+  const [typeId, setTypeId] = useState();
+
+  const [user, setUser] = useState();
+
   const { projectDetail } = useSelector((state) => state.projectReducer);
 
-  console.log(projectDetail);
-  // set dữ liệu cho desciption
-  const [visibleEditor, setVisibleEditor] = useState(false);
-  const [contentDes, setContentDes] = useState(taskDetailModal.description);
-  const [historyDes, setHistoryDes] = useState(taskDetailModal.description);
+  const userOption = projectDetail.members?.map((ele) => {
+    return { value: ele.userId, label: ele.name };
+  });
 
-  const dispatch = useDispatch();
+  useEffect(() => {
+    setUser(
+      taskDetailModal.assigness?.map((ele) => {
+        return { value: ele.id, label: ele.name };
+      })
+    );
+    setTaskName(taskDetailModal.taskName);
+    setTypeId(taskDetailModal.typeId);
+  }, [taskDetailModal]);
 
   const { state: status = [] } = useAsync({
     service: () => fetchGetStatusApi(),
   });
-
   const { state: priority = [] } = useAsync({
     service: () => fetchGetPriorityApi(),
   });
-
   const { state: taskType = [] } = useAsync({
     service: () => fetchGetTaskTypeApi(),
   });
-
   const setProjectDetail = async () => {
     const result = await fetchGetProjectDetailApi(taskDetailModal.projectId);
     dispatch(getProjectDetailAction(result.data.content));
@@ -95,7 +120,21 @@ export default function TaskDetailModal() {
               className="form-control"
               name="timeTrackingSpent"
               value={taskDetailModal.timeTrackingSpent}
-              onChange={handleChange}
+              onChange={async (e) => {
+                const { value, name } = e.target;
+                try {
+                  await fetchUpdateTimeTrackingApi({
+                    taskId: taskDetailModal.taskId,
+                    timeTrackingSpent: value,
+                    timeTrackingRemaining:
+                      taskDetailModal.timeTrackingRemaining,
+                  });
+                  dispatch(changeTaskModal(value, name));
+                  setProjectDetail();
+                } catch (err) {
+                  console.log(err);
+                }
+              }}
             />
           </div>
           <div className="col-6">
@@ -105,7 +144,20 @@ export default function TaskDetailModal() {
               className="form-control"
               name="timeTrackingRemaining"
               value={taskDetailModal.timeTrackingRemaining}
-              onChange={handleChange}
+              onChange={async (e) => {
+                const { value, name } = e.target;
+                try {
+                  await fetchUpdateTimeTrackingApi({
+                    taskId: taskDetailModal.taskId,
+                    timeTrackingRemaining: value,
+                    timeTrackingSpent: taskDetailModal.timeTrackingSpent,
+                  });
+                  dispatch(changeTaskModal(value, name));
+                  setProjectDetail();
+                } catch (err) {
+                  console.log(err);
+                }
+              }}
             />
           </div>
         </div>
@@ -134,18 +186,27 @@ export default function TaskDetailModal() {
                   "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
               }}
               onEditorChange={(content, editor) => {
-                setContentDes(content);
+                setContent(content);
               }}
             />
             <div className="my-3">
               <button
                 className="btn btn-primary"
-                onClick={() => {
-                  dispatch({
-                    type: CHANGE_TASK_MODAL,
-                    name: "description",
-                    value: contentDes,
-                  });
+                onClick={async () => {
+                  try {
+                    await fetchUpdateDesciptionApi({
+                      taskId: taskDetailModal.taskId,
+                      description: content,
+                    });
+                    dispatch({
+                      type: CHANGE_TASK_MODAL,
+                      name: "description",
+                      value: content,
+                    });
+                    setProjectDetail();
+                  } catch (error) {
+                    console.log(error);
+                  }
                   setVisibleEditor(false);
                 }}
               >
@@ -154,11 +215,6 @@ export default function TaskDetailModal() {
               <button
                 className="btn btn-outline-danger ml-2"
                 onClick={() => {
-                  dispatch({
-                    type: CHANGE_TASK_MODAL,
-                    name: "description",
-                    value: historyDes,
-                  });
                   setVisibleEditor(false);
                 }}
               >
@@ -170,7 +226,6 @@ export default function TaskDetailModal() {
           <div
             onClick={() => {
               setVisibleEditor(!visibleEditor);
-              setHistoryDes(taskDetailModal.description);
             }}
           >
             {jsxDescription}
@@ -180,10 +235,9 @@ export default function TaskDetailModal() {
     );
   };
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { value, name } = e.target;
-    dispatch(changeTaskModal(value, name));
-    setProjectDetail();
+    console.log(name, value);
   };
 
   return (
@@ -238,15 +292,35 @@ export default function TaskDetailModal() {
         <div className="modal-dialog modal-info">
           <div className="modal-content">
             <div className="modal-header pb-0">
-              <div className="task-title d-flex align-items-center">
+              <div className="taskType task-title d-flex align-items-center">
                 <p className="mr-2 text-warning font-weight-bold mb-0">
                   <i className="fas fa-bookmark"></i>
                 </p>
                 <select
                   className="custom-select"
                   name="typeId"
-                  value={taskDetailModal.typeId}
-                  onChange={handleChange}
+                  value={typeId}
+                  onChange={
+                    // handleChange
+                    async (e) => {
+                      setTypeId(e.target.value);
+                      try {
+                        await fetchUpdateTaskDetailApi({
+                          ...taskDetailModal,
+                          typeId: e.target.value,
+                        });
+
+                        dispatch({
+                          type: CHANGE_TASK_MODAL,
+                          name: "typeId",
+                          value: e.target.value,
+                        });
+                        setProjectDetail();
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    }
+                  }
                 >
                   {taskType.map((ele, index) => {
                     return (
@@ -275,8 +349,7 @@ export default function TaskDetailModal() {
                       notification.success({
                         description: "Successfully !",
                       });
-                      setProjectDetail()
-                      document.querySelectorAll("#close").onClick = true
+                      setProjectDetail();
                     } catch (err) {
                       notification.error({
                         message: err.response.data.content,
@@ -299,8 +372,55 @@ export default function TaskDetailModal() {
               <div className="container-fluid">
                 <div className="row">
                   <div className="col-8">
-                    <h3 className="font-weight-bold mt-3 mb-4">
-                      {taskDetailModal.taskName}
+                    <h3 className="taskName font-weight-bold mt-3 mb-4">
+                      {visibleTaskName ? (
+                        <div className="d-flex">
+                          <input
+                            name="taskName"
+                            style={{ width: "100%" }}
+                            value={taskName}
+                            onChange={(e) => {
+                              setTaskName(e.target.value);
+                            }}
+                          />
+                          <button className="btn btn-outline-dark">
+                            <i
+                              onClick={async () => {
+                                try {
+                                  await fetchUpdateTaskDetailApi({
+                                    ...taskDetailModal,
+                                    taskName: taskName,
+                                  });
+                                  dispatch({
+                                    type: CHANGE_TASK_MODAL,
+                                    value: taskName,
+                                    name: "taskName",
+                                  });
+                                  setProjectDetail();
+                                } catch (err) {
+                                  console.log(err);
+                                }
+                                setVisibleTaskName(false);
+                              }}
+                              className="fas fa-check text-success"
+                            ></i>
+                          </button>
+                          <button className="btn btn-outline-dark">
+                            <i
+                              onClick={() => {
+                                setVisibleTaskName(false);
+                              }}
+                              className="fas fa-times text-danger"
+                            ></i>
+                          </button>
+                        </div>
+                      ) : (
+                        <div
+                          onClick={() => setVisibleTaskName(!visibleTaskName)}
+                        >
+                          {taskDetailModal.taskName}
+                        </div>
+                      )}
                     </h3>
                     <div className="description">
                       <h6 className="text-warning font-weight-bold">
@@ -383,26 +503,27 @@ export default function TaskDetailModal() {
                         className="custom-select"
                         name="statusId"
                         value={taskDetailModal.statusId}
-                        onChange={
-                          handleChange
-                          // async (e) => {
-                          //   try {
-                          //     await fetchUpdatePriorityApi({
-                          //       taskId: taskId,
-                          //       priorityId: e.target.value,
-                          //     });
-                          //     notification.success({
-                          //       description: "Successfully !",
-                          //     });
-                          //     setProjectDetail();
-                          //   } catch (error) {
-                          //     console.log(error);
-                          //     notification.error({
-                          //       message: error.response.data.content,
-                          //     });
-                          //   }
-                          // }
-                        }
+                        onChange={async (e) => {
+                          try {
+                            await fetchUpdateStatusApi({
+                              taskId: taskDetailModal.taskId,
+                              statusId: e.target.value,
+                            });
+                            notification.success({
+                              description: "Successfully !",
+                            });
+                            dispatch({
+                              type: CHANGE_TASK_MODAL,
+                              name: "statusId",
+                              value: e.target.value,
+                            });
+                            setProjectDetail();
+                          } catch (error) {
+                            notification.error({
+                              message: error.response.data.content,
+                            });
+                          }
+                        }}
                       >
                         {status.map((ele, index) => {
                           return (
@@ -418,60 +539,29 @@ export default function TaskDetailModal() {
                         ASSIGNEES
                       </h6>
                       <div>
-                        {taskDetailModal.assigness?.map((ele, index) => {
-                          return (
-                            <div
-                              className="item d-flex align-items-center my-1 mr-0"
-                              style={{ width: "auto" }}
-                              key={index}
-                            >
-                              <div className="avatar mr-2">
-                                <img src={ele.avatar} alt="avatar" />
-                              </div>
-                              <p className="name">
-                                {ele.name}
-                                <i
-                                  className="fa fa-times"
-                                  style={{ marginLeft: 5, cursor: "pointer" }}
-                                  onClick={() => {
-                                    dispatch(removeUserAssignessAction(ele.id));
-                                  }}
-                                />
-                              </p>
-                            </div>
-                          );
-                        })}
                         <div className="text-primary mt-2">
                           <Select
-                            style={{ width: "100%" }}
+                            mode="multiple"
+                            placeholder="Please search user"
                             optionFilterProp="label"
-                            value="+ Add more"
-                            options={projectDetail.members
-                              ?.filter((user) => {
-                                let index =
-                                  taskDetailModal.assigness?.findIndex(
-                                    (mem) => mem.id === user.userId
-                                  );
-                                if (index !== -1) {
-                                  return false;
-                                }
-                                return true;
-                              })
-                              .map((user, index) => {
-                                return { value: user.userId, label: user.name };
-                              })}
-                            onSelect={(value) => {
-                              if (value === "0") {
-                                return;
+                            value={user}
+                            onChange={async (values) => {
+                              setUser(values);
+                              try {
+                                await fetchUpdateTaskDetailApi({
+                                  ...taskDetailModal,
+                                  taskId: taskDetailModal.taskId.toString(),
+                                  listUserAsign: values,
+                                });
+                                dispatch(selectedUserTaskAction(values));
+                              } catch (err) {
+                                console.log(err);
                               }
-                              let userSelected = projectDetail.members?.find(
-                                (mem) => mem.userId == value
-                              );
-                              userSelected = {
-                                ...userSelected,
-                                id: userSelected.userId,
-                              };
-                              dispatch(changeAssignessModal(userSelected));
+                            }}
+                            name="listUserAsign"
+                            options={userOption}
+                            style={{
+                              width: "100%",
                             }}
                           ></Select>
                         </div>
@@ -484,7 +574,30 @@ export default function TaskDetailModal() {
                       <select
                         className="custom-select"
                         value={taskDetailModal.priorityId}
-                        onChange={handleChange}
+                        onChange={
+                          // handleChange
+                          async (e) => {
+                            try {
+                              await fetchUpdatePriorityApi({
+                                taskId: taskDetailModal.taskId,
+                                priorityId: e.target.value,
+                              });
+                              notification.success({
+                                description: "Successfully !",
+                              });
+                              dispatch({
+                                type: CHANGE_TASK_MODAL,
+                                name: "priorityId",
+                                value: e.target.value,
+                              });
+                              setProjectDetail();
+                            } catch (error) {
+                              notification.error({
+                                message: error.response.data.content,
+                              });
+                            }
+                          }
+                        }
                         name="priorityId"
                       >
                         {priority.map((ele, index) => {
@@ -504,7 +617,19 @@ export default function TaskDetailModal() {
                         type="number"
                         className="estimate-hours"
                         value={taskDetailModal.originalEstimate}
-                        onChange={handleChange}
+                        onChange={async (e) => {
+                          const { value, name } = e.target;
+                          try {
+                            await fetchUpdateEstimateApi({
+                              taskId: taskDetailModal.taskId,
+                              originalEstimate: value,
+                            });
+                            dispatch(changeTaskModal(value, name));
+                            setProjectDetail();
+                          } catch (err) {
+                            console.log(err);
+                          }
+                        }}
                         name="originalEstimate"
                         min={0}
                       />

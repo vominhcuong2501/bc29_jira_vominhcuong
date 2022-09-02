@@ -65,10 +65,10 @@ export const fetchUpdateEstimateApi = (estimate) => {
     })
 }
 
-export const fetchUpdateTaskDetail = (data) => {
+export const fetchUpdateTaskDetailApi = (data) => {
     return axios({
         url: `${BASE_URL}/Project/updateTask`,
-        method: "PUT",
+        method: "POST",
         data: data,
         headers: AUTHORIZATION
 
