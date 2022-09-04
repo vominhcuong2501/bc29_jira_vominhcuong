@@ -20,7 +20,6 @@ export default function MainContent(props) {
   };
 
   const handleDragEnd = async (result) => {
-    console.log(result);
     const { source, destination, draggableId } = result;
     if (!destination) {
       return;

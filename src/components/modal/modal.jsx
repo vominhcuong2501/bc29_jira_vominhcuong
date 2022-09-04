@@ -53,7 +53,9 @@ export default function TaskDetailModal() {
 
   const [comment, setComment] = useState();
 
-  const [commentUpdate, setCommentUpdate] = useState();
+  const [commentId, setCommentId] = useState(0);
+
+  const [commentEdit, setCommentEdit] = useState();
 
   const { projectDetail } = useSelector((state) => state.projectReducer);
 
@@ -73,6 +75,7 @@ export default function TaskDetailModal() {
     );
     setTaskName(taskDetailModal.taskName);
     setTypeId(taskDetailModal.typeId);
+   
   }, [taskDetailModal]);
 
   const { state: status = [] } = useAsync({
@@ -88,7 +91,6 @@ export default function TaskDetailModal() {
     service: () => fetchGetCommentApi(taskDetailModal.taskId),
     dependencies: [taskDetailModal],
   });
-  console.log(commentList);
   const setProjectDetail = async () => {
     const result = await fetchGetProjectDetailApi(taskDetailModal.projectId);
     dispatch(getProjectDetailAction(result.data.content));
@@ -536,14 +538,44 @@ export default function TaskDetailModal() {
                                   <p style={{ marginBottom: 5, color: "blue" }}>
                                     {ele.user.name}
                                   </p>
-                                  {visibleComment ? (
+                                  {visibleComment && ele.id === commentId ? (
                                     <div className="input-comment input-group mb-3 ">
                                       <input
                                         type="text"
                                         className="form-control"
+                                        defaultValue={ele.contentComment}
+                                        onChange={(e) => {
+                                          setCommentEdit(e.target.value);
+                                        }}
                                       />
                                       <div className="input-group-append">
-                                        <button className="btn btn-outline-primary">
+                                        <button
+                                          className="btn btn-outline-primary"
+                                          onClick={async () => {
+                                            
+                                            try {
+                                              await fetchUpdateCommentApi({
+                                                id: commentId,
+                                                contentComment: commentEdit,
+                                              });
+                                              notification.success({
+                                                description: "Successfully !",
+                                              });
+                                              dispatch({
+                                                type: CHANGE_TASK_MODAL,
+                                                value: [...commentList],
+                                                name: "lstComment",
+                                              });
+                                              setVisibleComment(false);
+                                              setProjectDetail();
+                                            } catch (error) {
+                                              notification.error({
+                                                message:
+                                                  error.response.data.content,
+                                              });
+                                            }
+                                          }}
+                                        >
                                           <i className="fas fa-paper-plane"></i>
                                         </button>
                                       </div>
@@ -559,6 +591,7 @@ export default function TaskDetailModal() {
                                           title="Edit"
                                           onClick={() => {
                                             setVisibleComment(!visibleComment);
+                                            setCommentId(ele.id);
                                           }}
                                         >
                                           <i className="fas fa-edit"></i>
