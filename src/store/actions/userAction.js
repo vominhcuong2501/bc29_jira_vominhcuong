@@ -1,6 +1,6 @@
 import { EDIT_USER, GET_USER, GET_USER_BY_PROJECT, GET_USER_LIST, SET_USER_INFO } from "../types/userType";
 
-export const signinAction = (values) => {
+export const setUserAction = (values) => {
     return {
         type: SET_USER_INFO,
         payload: values

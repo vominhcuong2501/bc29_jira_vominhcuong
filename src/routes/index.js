@@ -1,6 +1,5 @@
 import { lazy } from "react";
 import { useRoutes } from "react-router-dom";
-import DemoDragdrop from "../pages/demo-dragdrop/demo-dragdrop";
 const HomeLayout = lazy(() => import("../layouts/home"))
 const Login = lazy(() => import("../pages/login/login"))
 const Register = lazy(() => import("../pages/register/register"))
@@ -9,7 +8,6 @@ const CreateProject = lazy(() => import("../pages/create-project/create-project"
 const AuthGuard = lazy(() => import("../pages/guards/auth.guard"))
 const NoAuthGuard = lazy(() => import("../pages/guards/noAuth.guard"))
 const ProjectManagement = lazy(() => import("../pages/project-management/project-management"))
-const FormCreateTask = lazy(() => import("../modules/form-create-task/form-create-task"))
 const UserManagement = lazy(() => import("../pages/user-management/user-management"))
 
 export default function Router() {
@@ -19,7 +17,7 @@ export default function Router() {
             element: <AuthGuard />,
             children: [
                 {
-                    path: '/',
+                    path: "/",
                     element: <HomeLayout />,
                     children: [
                         {
@@ -38,11 +36,6 @@ export default function Router() {
                             path: "/user-management",
                             element: <UserManagement />,
                         },
-                        {
-                            path: "/demo",
-                            element: <DemoDragdrop />,
-                        },
-                        
                     ]
                 },
 

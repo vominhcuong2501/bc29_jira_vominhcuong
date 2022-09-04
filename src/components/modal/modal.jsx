@@ -25,7 +25,12 @@ import {
   fetchUpdateTaskDetailApi,
   fetchUpdateTimeTrackingApi,
 } from "../../services/task";
-const { Option } = Select;
+import {
+  fetchCommentApi,
+  fetchDeleteCommentApi,
+  fetchGetCommentApi,
+  fetchUpdateCommentApi,
+} from "../../services/comment";
 
 export default function TaskDetailModal() {
   const dispatch = useDispatch();
@@ -36,6 +41,8 @@ export default function TaskDetailModal() {
 
   const [visibleTaskName, setVisibleTaskName] = useState(false);
 
+  const [visibleComment, setVisibleComment] = useState();
+
   const [content, setContent] = useState(taskDetailModal.description);
 
   const [taskName, setTaskName] = useState();
@@ -44,10 +51,18 @@ export default function TaskDetailModal() {
 
   const [user, setUser] = useState();
 
+  const [comment, setComment] = useState();
+
+  const [commentUpdate, setCommentUpdate] = useState();
+
   const { projectDetail } = useSelector((state) => state.projectReducer);
 
   const userOption = projectDetail.members?.map((ele) => {
     return { value: ele.userId, label: ele.name };
+  });
+
+  const assign = taskDetailModal.assigness?.map((userId) => {
+    return userId.id;
   });
 
   useEffect(() => {
@@ -69,10 +84,14 @@ export default function TaskDetailModal() {
   const { state: taskType = [] } = useAsync({
     service: () => fetchGetTaskTypeApi(),
   });
+  const { state: commentList = [] } = useAsync({
+    service: () => fetchGetCommentApi(taskDetailModal.taskId),
+    dependencies: [taskDetailModal],
+  });
+  console.log(commentList);
   const setProjectDetail = async () => {
     const result = await fetchGetProjectDetailApi(taskDetailModal.projectId);
     dispatch(getProjectDetailAction(result.data.content));
-    console.log(result.data.content);
   };
 
   const renderTimeTracking = () => {
@@ -129,10 +148,15 @@ export default function TaskDetailModal() {
                     timeTrackingRemaining:
                       taskDetailModal.timeTrackingRemaining,
                   });
+                  notification.success({
+                    description: "Successfully !",
+                  });
                   dispatch(changeTaskModal(value, name));
                   setProjectDetail();
-                } catch (err) {
-                  console.log(err);
+                } catch (error) {
+                  notification.error({
+                    message: error.response.data.content,
+                  });
                 }
               }}
             />
@@ -152,10 +176,15 @@ export default function TaskDetailModal() {
                     timeTrackingRemaining: value,
                     timeTrackingSpent: taskDetailModal.timeTrackingSpent,
                   });
+                  notification.success({
+                    description: "Successfully !",
+                  });
                   dispatch(changeTaskModal(value, name));
                   setProjectDetail();
-                } catch (err) {
-                  console.log(err);
+                } catch (error) {
+                  notification.error({
+                    message: error.response.data.content,
+                  });
                 }
               }}
             />
@@ -193,19 +222,24 @@ export default function TaskDetailModal() {
               <button
                 className="btn btn-primary"
                 onClick={async () => {
+                  dispatch({
+                    type: CHANGE_TASK_MODAL,
+                    name: "description",
+                    value: content,
+                  });
                   try {
                     await fetchUpdateDesciptionApi({
                       taskId: taskDetailModal.taskId,
                       description: content,
                     });
-                    dispatch({
-                      type: CHANGE_TASK_MODAL,
-                      name: "description",
-                      value: content,
+                    notification.success({
+                      description: "Successfully !",
                     });
                     setProjectDetail();
                   } catch (error) {
-                    console.log(error);
+                    notification.error({
+                      message: error.response.data.content,
+                    });
                   }
                   setVisibleEditor(false);
                 }}
@@ -233,11 +267,6 @@ export default function TaskDetailModal() {
         )}
       </div>
     );
-  };
-
-  const handleChange = async (e) => {
-    const { value, name } = e.target;
-    console.log(name, value);
   };
 
   return (
@@ -300,27 +329,30 @@ export default function TaskDetailModal() {
                   className="custom-select"
                   name="typeId"
                   value={typeId}
-                  onChange={
-                    // handleChange
-                    async (e) => {
-                      setTypeId(e.target.value);
-                      try {
-                        await fetchUpdateTaskDetailApi({
-                          ...taskDetailModal,
-                          typeId: e.target.value,
-                        });
-
-                        dispatch({
-                          type: CHANGE_TASK_MODAL,
-                          name: "typeId",
-                          value: e.target.value,
-                        });
-                        setProjectDetail();
-                      } catch (err) {
-                        console.log(err);
-                      }
+                  onChange={async (e) => {
+                    setTypeId(e.target.value);
+                    try {
+                      await fetchUpdateTaskDetailApi({
+                        ...taskDetailModal,
+                        typeId: e.target.value,
+                        listUserAsign: assign,
+                      });
+                      notification.success({
+                        description: "Successfully !",
+                      });
+                      dispatch({
+                        type: CHANGE_TASK_MODAL,
+                        name: "typeId",
+                        value: e.target.value,
+                      });
+                      // document.getElementById("close").click();
+                      setProjectDetail();
+                    } catch (error) {
+                      notification.error({
+                        message: error.response.data.content,
+                      });
                     }
-                  }
+                  }}
                 >
                   {taskType.map((ele, index) => {
                     return (
@@ -331,18 +363,14 @@ export default function TaskDetailModal() {
                   })}
                 </select>
               </div>
-              <div style={{ display: "flex" }} className="task-click">
-                <div>
-                  <i className="fab fa-telegram-plane mr-2" />
-                  <span style={{ paddingRight: 20 }}>Give feedback</span>
-                </div>
-                <div>
-                  <i className="fa fa-link mr-2" />
-                  <span style={{ paddingRight: 20 }}>Copy link</span>
-                </div>
+              <div
+                className="delete-task task-click"
+                style={{ display: "flex" }}
+              >
                 <i
                   className="fa fa-trash-alt"
                   style={{ cursor: "pointer" }}
+                  title="Delete task"
                   onClick={async () => {
                     try {
                       await fetchRemoveTaskApi(taskDetailModal.taskId);
@@ -350,9 +378,9 @@ export default function TaskDetailModal() {
                         description: "Successfully !",
                       });
                       setProjectDetail();
-                    } catch (err) {
+                    } catch (error) {
                       notification.error({
-                        message: err.response.data.content,
+                        message: error.response.data.content,
                       });
                     }
                   }}
@@ -374,45 +402,53 @@ export default function TaskDetailModal() {
                   <div className="col-8">
                     <h3 className="taskName font-weight-bold mt-3 mb-4">
                       {visibleTaskName ? (
-                        <div className="d-flex">
+                        <div className="input-group mb-3">
                           <input
-                            name="taskName"
-                            style={{ width: "100%" }}
+                            type="text"
+                            className="form-control"
                             value={taskName}
                             onChange={(e) => {
                               setTaskName(e.target.value);
                             }}
                           />
-                          <button className="btn btn-outline-dark">
-                            <i
-                              onClick={async () => {
-                                try {
-                                  await fetchUpdateTaskDetailApi({
-                                    ...taskDetailModal,
-                                    taskName: taskName,
-                                  });
-                                  dispatch({
-                                    type: CHANGE_TASK_MODAL,
-                                    value: taskName,
-                                    name: "taskName",
-                                  });
-                                  setProjectDetail();
-                                } catch (err) {
-                                  console.log(err);
-                                }
-                                setVisibleTaskName(false);
-                              }}
-                              className="fas fa-check text-success"
-                            ></i>
-                          </button>
-                          <button className="btn btn-outline-dark">
-                            <i
-                              onClick={() => {
-                                setVisibleTaskName(false);
-                              }}
-                              className="fas fa-times text-danger"
-                            ></i>
-                          </button>
+                          <div className="input-group-append">
+                            <button className="btn btn-outline-success">
+                              <i
+                                onClick={async () => {
+                                  try {
+                                    await fetchUpdateTaskDetailApi({
+                                      ...taskDetailModal,
+                                      taskName: taskName,
+                                    });
+                                    notification.success({
+                                      description: "Successfully !",
+                                    });
+                                    document.getElementById("close").click();
+                                    dispatch({
+                                      type: CHANGE_TASK_MODAL,
+                                      value: taskName,
+                                      name: "taskName",
+                                    });
+                                    setProjectDetail();
+                                  } catch (error) {
+                                    notification.error({
+                                      message: error.response.data.content,
+                                    });
+                                  }
+                                  setVisibleTaskName(false);
+                                }}
+                                className="fas fa-check"
+                              ></i>
+                            </button>
+                            <button className="btn btn-outline-danger">
+                              <i
+                                onClick={() => {
+                                  setVisibleTaskName(false);
+                                }}
+                                className="fas fa-times"
+                              ></i>
+                            </button>
+                          </div>
                         </div>
                       ) : (
                         <div
@@ -442,56 +478,125 @@ export default function TaskDetailModal() {
                             alt="avatar"
                           />
                         </div>
-                        <div className="input-comment">
-                          <input type="text" placeholder="Add a comment ..." />
-                          <p>
-                            <span style={{ fontWeight: 500, color: "gray" }}>
-                              Protip:
-                            </span>
-                            <span>
-                              press
-                              <span
-                                style={{
-                                  fontWeight: "bold",
-                                  background: "#ecedf0",
-                                  color: "#b4bac6",
-                                }}
-                              >
-                                M
-                              </span>
-                              to comment
-                            </span>
-                          </p>
+                        <div className="input-comment input-group mb-3 ">
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Comment ..."
+                            onChange={(e) => {
+                              setComment(e.target.value);
+                            }}
+                          />
+                          <div className="input-group-append">
+                            <button
+                              className="btn btn-outline-primary"
+                              onClick={async () => {
+                                try {
+                                  await fetchCommentApi({
+                                    taskId: taskDetailModal.taskId,
+                                    contentComment: comment,
+                                  });
+                                  notification.success({
+                                    description: "Successfully !",
+                                  });
+                                  dispatch({
+                                    type: CHANGE_TASK_MODAL,
+                                    value: commentList,
+                                    name: "lstComment",
+                                  });
+                                  setProjectDetail();
+                                } catch (error) {
+                                  notification.error({
+                                    message: error.response.data.content,
+                                  });
+                                }
+                              }}
+                            >
+                              <i className="fas fa-paper-plane"></i>
+                            </button>
+                          </div>
                         </div>
                       </div>
                       <div className="lastest-comment">
                         <div className="comment-item">
-                          <div
-                            className="display-comment"
-                            style={{ display: "flex" }}
-                          >
-                            <div className="avatar">
-                              <img
-                                src={require("./../../assets/img/download (1).jfif")}
-                                alt="avatar"
-                              />
-                            </div>
-                            <div>
-                              <p style={{ marginBottom: 5 }}>
-                                Lord Gaben <span>a month ago</span>
-                              </p>
-                              <p style={{ marginBottom: 5 }}>
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipisicing elit. Repellendus tempora ex
-                                voluptatum saepe ab officiis alias totam ad
-                                accusamus molestiae?
-                              </p>
-                              <div>
-                                <span style={{ color: "#929398" }}>Edit</span>•
-                                <span style={{ color: "#929398" }}>Delete</span>
+                          {commentList?.map((ele) => {
+                            return (
+                              <div
+                                className="display-comment"
+                                style={{ display: "flex" }}
+                                key={ele.id}
+                              >
+                                <div className="avatar">
+                                  <img
+                                    src={ele.user.avatar}
+                                    alt={ele.user.avatar}
+                                  />
+                                </div>
+                                <div style={{ width: "100%" }}>
+                                  <p style={{ marginBottom: 5, color: "blue" }}>
+                                    {ele.user.name}
+                                  </p>
+                                  {visibleComment ? (
+                                    <div className="input-comment input-group mb-3 ">
+                                      <input
+                                        type="text"
+                                        className="form-control"
+                                      />
+                                      <div className="input-group-append">
+                                        <button className="btn btn-outline-primary">
+                                          <i className="fas fa-paper-plane"></i>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <div className="d-flex justify-content-between">
+                                      <p style={{ marginBottom: 5 }}>
+                                        {ele.contentComment}
+                                      </p>
+                                      <div>
+                                        <a
+                                          className="text-success mr-2"
+                                          title="Edit"
+                                          onClick={() => {
+                                            setVisibleComment(!visibleComment);
+                                          }}
+                                        >
+                                          <i className="fas fa-edit"></i>
+                                        </a>
+                                        <a
+                                          className="text-danger"
+                                          title="Delete"
+                                          onClick={async () => {
+                                            try {
+                                              await fetchDeleteCommentApi(
+                                                ele.id
+                                              );
+                                              notification.success({
+                                                description: "Successfully !",
+                                              });
+                                              dispatch({
+                                                type: CHANGE_TASK_MODAL,
+                                                value: commentList,
+                                                name: "lstComment",
+                                              });
+                                              setProjectDetail();
+                                            } catch (error) {
+                                              notification.error({
+                                                message:
+                                                  error.response.data.content,
+                                              });
+                                            }
+                                          }}
+                                        >
+                                          <i className="fas fa-trash-alt"></i>
+                                        </a>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
-                            </div>
-                          </div>
+                            );
+                          })}
                         </div>
                       </div>
                     </div>
@@ -553,9 +658,15 @@ export default function TaskDetailModal() {
                                   taskId: taskDetailModal.taskId.toString(),
                                   listUserAsign: values,
                                 });
+                                notification.success({
+                                  description: "Successfully !",
+                                });
                                 dispatch(selectedUserTaskAction(values));
-                              } catch (err) {
-                                console.log(err);
+                                setProjectDetail();
+                              } catch (error) {
+                                notification.error({
+                                  message: error.response.data.content,
+                                });
                               }
                             }}
                             name="listUserAsign"
@@ -574,30 +685,27 @@ export default function TaskDetailModal() {
                       <select
                         className="custom-select"
                         value={taskDetailModal.priorityId}
-                        onChange={
-                          // handleChange
-                          async (e) => {
-                            try {
-                              await fetchUpdatePriorityApi({
-                                taskId: taskDetailModal.taskId,
-                                priorityId: e.target.value,
-                              });
-                              notification.success({
-                                description: "Successfully !",
-                              });
-                              dispatch({
-                                type: CHANGE_TASK_MODAL,
-                                name: "priorityId",
-                                value: e.target.value,
-                              });
-                              setProjectDetail();
-                            } catch (error) {
-                              notification.error({
-                                message: error.response.data.content,
-                              });
-                            }
+                        onChange={async (e) => {
+                          try {
+                            await fetchUpdatePriorityApi({
+                              taskId: taskDetailModal.taskId,
+                              priorityId: e.target.value,
+                            });
+                            notification.success({
+                              description: "Successfully !",
+                            });
+                            dispatch({
+                              type: CHANGE_TASK_MODAL,
+                              name: "priorityId",
+                              value: e.target.value,
+                            });
+                            setProjectDetail();
+                          } catch (error) {
+                            notification.error({
+                              message: error.response.data.content,
+                            });
                           }
-                        }
+                        }}
                         name="priorityId"
                       >
                         {priority.map((ele, index) => {
@@ -624,10 +732,15 @@ export default function TaskDetailModal() {
                               taskId: taskDetailModal.taskId,
                               originalEstimate: value,
                             });
+                            notification.success({
+                              description: "Successfully !",
+                            });
                             dispatch(changeTaskModal(value, name));
                             setProjectDetail();
-                          } catch (err) {
-                            console.log(err);
+                          } catch (error) {
+                            notification.error({
+                              message: error.response.data.content,
+                            });
                           }
                         }}
                         name="originalEstimate"

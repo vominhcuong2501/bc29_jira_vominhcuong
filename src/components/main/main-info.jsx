@@ -27,12 +27,6 @@ export default function MainInfo(props) {
         <div className="avatar-group" style={{ display: "flex" }}>
           {renderAvatar()}
         </div>
-        <div style={{ marginLeft: 20 }} className="text">
-          Only My Issues
-        </div>
-        <div style={{ marginLeft: 20 }} className="text">
-          Recently Updated
-        </div>
       </div>
     </>
   );

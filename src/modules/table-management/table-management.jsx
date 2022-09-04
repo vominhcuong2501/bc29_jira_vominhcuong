@@ -408,10 +408,10 @@ export default function TableManagement() {
     },
   ];
   return (
-    <div className="container mx-5">
+    <div className="container m-5" >
       <h3 className="my-3 font-weight-bold">Project management</h3>
       <Table
-        className="table m-0"
+        className="table"
         rowKey={"id"}
         columns={columns}
         dataSource={table}

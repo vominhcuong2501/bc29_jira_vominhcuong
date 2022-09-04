@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Checkbox, Form, Input, notification } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
-import { signinAction } from "../../store/actions/userAction";
+import { setUserAction } from "../../store/actions/userAction";
 import { fetchUserLogin } from "../../services/user";
 import { ACCESS_TOKEN, USER_LOGIN_KEY } from "../../constans/common";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +23,7 @@ export default function FormLogin() {
         JSON.stringify(result.data.content.accessToken)
       );
 
-      dispatch(signinAction(result.data.content));
+      dispatch(setUserAction(result.data.content));
       notification.success({
         description: "Successfully !",
       });
