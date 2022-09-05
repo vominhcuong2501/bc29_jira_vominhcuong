@@ -13,11 +13,11 @@ export default function Header() {
     <div className="w-100 p-3">
       <div className="d-flex justify-content-end align-items-center">
         <div className="avatar mr-2">
-          <img src={userInfo.avatar} alt={userInfo.avatar} />
+          <img src={userInfo?.avatar} alt={userInfo?.avatar} />
         </div>
         <div className="d-flex justify-content-center align-items-center">
           <h5 className="font-weight-bold text-warning m-0 mr-2">
-            {userInfo.name}
+            {userInfo?.name}
           </h5>
           <button className="btn btn-outline-danger">
             <i
