@@ -22,10 +22,7 @@ import {
 } from "../../services/cyberbugs";
 import { getUserByProjectApi } from "../../services/user";
 import { getUserByProjectAction } from "../../store/actions/userAction";
-import {
-  getTaskDetailAction,
-  selectedUserTaskAction,
-} from "../../store/actions/taskAction";
+import { selectedUserTaskAction } from "../../store/actions/taskAction";
 import { useNavigate } from "react-router-dom";
 import { fetchCreateTaskApi } from "../../services/task";
 

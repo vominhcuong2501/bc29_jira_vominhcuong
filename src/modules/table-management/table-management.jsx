@@ -22,7 +22,7 @@ import {
   fetchGetAllProjectApi,
   fetchGetProjectDetailApi,
 } from "../../services/project";
-import { openFormEditProjectAction, openFormEditUserAction } from "../../store/actions/modalEditAction";
+import { openFormEditProjectAction } from "../../store/actions/modalEditAction";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import "./table-management.scss";
 import {
@@ -32,7 +32,7 @@ import {
 import { getUserApi, removeUserProjectApi } from "../../services/user";
 import { getUserAction } from "../../store/actions/userAction";
 import { LoadingContext } from "../../contexts/loading.context";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export default function TableManagement() {
   const [value, setValue] = useState();

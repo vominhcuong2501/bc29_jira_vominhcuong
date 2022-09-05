@@ -75,7 +75,6 @@ export default function TaskDetailModal() {
     );
     setTaskName(taskDetailModal.taskName);
     setTypeId(taskDetailModal.typeId);
-   
   }, [taskDetailModal]);
 
   const { state: status = [] } = useAsync({
@@ -541,6 +540,7 @@ export default function TaskDetailModal() {
                                   {visibleComment && ele.id === commentId ? (
                                     <div className="input-comment input-group mb-3 ">
                                       <input
+                                        name="lstComment"
                                         type="text"
                                         className="form-control"
                                         defaultValue={ele.contentComment}
@@ -552,12 +552,11 @@ export default function TaskDetailModal() {
                                         <button
                                           className="btn btn-outline-primary"
                                           onClick={async () => {
-                                            
                                             try {
-                                              await fetchUpdateCommentApi({
-                                                id: commentId,
-                                                contentComment: commentEdit,
-                                              });
+                                              await fetchUpdateCommentApi(
+                                                commentId,
+                                                commentEdit,
+                                              );
                                               notification.success({
                                                 description: "Successfully !",
                                               });

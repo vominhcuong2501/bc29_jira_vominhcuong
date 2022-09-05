@@ -1,10 +1,8 @@
 import React from "react";
 import parse from 'html-react-parser';
 
-
 export default function MainInfo(props) {
   const { members, projectName, description } = props.projectDetail;
-  const parse = require("html-react-parser"); // biên dịch cho thư viện tiny
   const descriptionHtml = parse(`${description}`)
   const renderAvatar = () => {
     return members?.map((user) => {

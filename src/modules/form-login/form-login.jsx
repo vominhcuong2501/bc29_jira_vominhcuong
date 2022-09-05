@@ -4,7 +4,7 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { setUserAction } from "../../store/actions/userAction";
 import { fetchUserLogin } from "../../services/user";
-import { ACCESS_TOKEN, USER_LOGIN_KEY } from "../../constans/common";
+import { USER_LOGIN_KEY } from "../../constans/common";
 import { useNavigate } from "react-router-dom";
 
 export default function FormLogin() {
@@ -16,13 +16,7 @@ export default function FormLogin() {
   const handleSubmit = async (values) => {
     try {
       const result = await fetchUserLogin(values);
-
       localStorage.setItem(USER_LOGIN_KEY, JSON.stringify(result.data.content));
-      localStorage.setItem(
-        ACCESS_TOKEN,
-        JSON.stringify(result.data.content.accessToken)
-      );
-
       dispatch(setUserAction(result.data.content));
       notification.success({
         description: "Successfully !",

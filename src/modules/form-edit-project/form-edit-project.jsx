@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Button, Form, Input, notification } from "antd";
-import { useNavigate } from "react-router-dom";
 import { Select } from "antd";
 import { fetchProjectCategoryApi } from "../../services/category";
 import { useAsync } from "../../hooks/useAsync";

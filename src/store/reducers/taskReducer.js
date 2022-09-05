@@ -1,4 +1,4 @@
-import { CHANGE_ASSIGNESS, CHANGE_TASK_MODAL, GET_TASK_DETAIL, REMOVE_USER, SELECTED_USER } from "../types/taskType"
+import { CHANGE_TASK_MODAL, GET_TASK_DETAIL, SELECTED_USER } from "../types/taskType"
 const DEFAULT_STATE = {
     selectedUser: [],
     taskDetailModal: {
@@ -11,14 +11,14 @@ const DEFAULT_STATE = {
             "taskType": "bug"
         },
         "assigness": [
-            
+
         ],
         "lstComment": [],
         "taskId": 5445,
         "taskName": "fix css",
         "alias": "fix-css",
         "description": "1231231231",
-        "statusId":4,
+        "statusId": 4,
         "originalEstimate": 0,
         "timeTrackingSpent": 3,
         "timeTrackingRemaining": 5,
@@ -39,9 +39,8 @@ export const taskReducer = (state = DEFAULT_STATE, action) => {
         }
 
         case CHANGE_TASK_MODAL: {
-            const {name, value} = action
-            console.log(name, value);
-            return {...state, taskDetailModal: {...state.taskDetailModal, [name]: value}}
+            const { name, value } = action
+            return { ...state, taskDetailModal: { ...state.taskDetailModal, [name]: value } }
         }
 
         default:

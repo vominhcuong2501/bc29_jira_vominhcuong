@@ -1,79 +1,73 @@
-import { AUTHORIZATION, BASE_URL } from "../constans/common"
-import axios from "axios"
+import {  request } from "../configs/axios"
 
 export const fetchUserLogin = (data) => {
-    return axios({
-        url: `${BASE_URL}/Users/signin`,
+    return request({
+        url: `/Users/signin`,
         method: "POST",
         data: data
     })
 }
 
+
 export const fetchUserRegister = (data) => {
-    return axios({
-        url: `${BASE_URL}/Users/signup`,
+    return request({
+        url: `/Users/signup`,
         method: "POST",
         data: data
     })
 }
 
 export const getUserApi = (keyWord) => {
-    return axios({
-        url: `${BASE_URL}/Users/getUser?keyword=${keyWord}`,
+    return request({
+        url: `/Users/getUser?keyword=${keyWord}`,
         method: "GET",
-        headers: AUTHORIZATION
 
     })
 }
 
 export const getUserListApi = () => {
-    return axios({
-        url: `${BASE_URL}/Users/getUser`,
+    return request({
+        url: `/Users/getUser`,
         method: "GET",
-        headers: AUTHORIZATION
 
     })
 }
 
 export const getUserDetailApi = (id) => {
-    return axios({
-        url: `${BASE_URL}/Users/getUser?id=${id}`,
+    return request({
+        url: `/Users/getUser?id=${id}`,
         method: "GET",
-        headers: AUTHORIZATION
 
     })
 }
 
 export const removeUserProjectApi = (userDelete) => {
-    return axios({
-        url: `${BASE_URL}/Project/removeUserFromProject`,
+    return request({
+        url: `/Project/removeUserFromProject`,
         method: "POST",
         data: userDelete,
-        headers: AUTHORIZATION
 
     })
 }
 
 export const getUserByProjectApi = (projectId) => {
-    return axios({
-        url: `${BASE_URL}/Users/getUserByProjectId?idProject=${projectId}`,
+    return request({
+        url: `/Users/getUserByProjectId?idProject=${projectId}`,
         method: "GET",
-        headers: AUTHORIZATION
     })
 }
 
 export const fetchDeleteUserApi = (userId) => {
-    return axios({
-        url: `${BASE_URL}/Users/deleteUser?id=${userId}`,
+    return request({
+        url: `/Users/deleteUser?id=${userId}`,
         method: "DELETE",
-        headers: AUTHORIZATION
 
     })
 }
 
 export const fetchUpdateUserApi = (userUpdate) => {
-    return axios({
-        url: `${BASE_URL}/Users/editUser`,
+    return request({
+        url: `/Users/editUser`,
         method: "PUT",
         data: userUpdate
     })

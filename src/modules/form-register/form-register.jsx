@@ -1,12 +1,11 @@
 import React from "react";
-import { Button, Checkbox, Form, Input, notification } from "antd";
+import { Button, Form, Input, notification } from "antd";
 import {
   UserOutlined,
   KeyOutlined,
   MailOutlined,
   PhoneOutlined,
 } from "@ant-design/icons";
-import { useDispatch } from "react-redux";
 import { fetchUserRegister } from "../../services/user";
 import { useNavigate } from "react-router-dom";
 

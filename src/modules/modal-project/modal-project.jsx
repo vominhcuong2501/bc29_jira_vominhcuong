@@ -1,9 +1,9 @@
-import { Button, Drawer, Space } from "antd";
+import { Drawer} from "antd";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { closeEditModalAction } from "../../store/actions/modalEditAction";
 
-export default function ModalProject(props) {
+export default function ModalProject() {
   const { visible, componentModalContent, title } = useSelector(
     (state) => state.modalEditProjectReducer
   );

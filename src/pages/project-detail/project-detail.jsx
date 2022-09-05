@@ -4,9 +4,7 @@ import MainContent from "../../components/main/main-content";
 import MainHeader from "../../components/main/main-header";
 import MainInfo from "../../components/main/main-info";
 import { fetchGetProjectDetailApi } from "../../services/project";
-import { useAsync } from "../../hooks/useAsync";
 import { useDispatch, useSelector } from "react-redux";
-import { notification } from "antd";
 import { getProjectDetailAction } from "../../store/actions/projectAction";
 
 export default function ProjectDetail() {

@@ -1,25 +1,24 @@
-import axios from "axios"
-import { AUTHORIZATION, BASE_URL } from "../constans/common"
+import { request } from "../configs/axios"
 
 export const fetchGetStatusApi = () => {
-    return axios({
-        url: `${BASE_URL}/Status/getAll`,
+    return request({
+        url: `/Status/getAll`,
         method: "GET",
 
     })
 }
 
 export const fetchGetPriorityApi = () => {
-    return axios({
-        url: `${BASE_URL}/Priority/getAll`,
+    return request({
+        url: `/Priority/getAll`,
         method: "GET",
 
     })
 }
 
 export const fetchGetTaskTypeApi = () => {
-    return axios({
-        url: `${BASE_URL}/TaskType/getAll`,
+    return request({
+        url: `/TaskType/getAll`,
         method: "GET",
 
     })

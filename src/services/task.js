@@ -1,85 +1,75 @@
-import axios from "axios"
-import { AUTHORIZATION, BASE_URL } from "../constans/common"
+import { request } from "../configs/axios"
 
 export const fetchCreateTaskApi = (data) => {
-    return axios({
-        url: `${BASE_URL}/Project/createTask`,
+    return request({
+        url: `/Project/createTask`,
         method: "POST",
         data: data,
-        headers: AUTHORIZATION
 
     })
 }
 export const fetchTaskDetailApi = (taskId) => {
-    return axios({
-        url: `${BASE_URL}/Project/getTaskDetail?taskId=${taskId}`,
+    return request({
+        url: `/Project/getTaskDetail?taskId=${taskId}`,
         method: "GET",
         data: taskId,
-        headers: AUTHORIZATION
     })
 }
 
 export const fetchUpdateStatusApi = (status) => {
-    return axios({
-        url: `${BASE_URL}/Project/updateStatus`,
+    return request({
+        url: `/Project/updateStatus`,
         method: "PUT",
         data: status,
-        headers: AUTHORIZATION
 
     })
 }
 export const fetchUpdatePriorityApi = (priority) => {
-    return axios({
-        url: `${BASE_URL}/Project/updatePriority`,
+    return request({
+        url: `/Project/updatePriority`,
         method: "PUT",
         data: priority,
-        headers: AUTHORIZATION
 
     })
 }
 export const fetchUpdateDesciptionApi = (desciption) => {
-    return axios({
-        url: `${BASE_URL}/Project/updateDescription`,
+    return request({
+        url: `/Project/updateDescription`,
         method: "PUT",
         data: desciption,
-        headers: AUTHORIZATION
 
     })
 }
 export const fetchUpdateTimeTrackingApi = (timeTracking) => {
-    return axios({
-        url: `${BASE_URL}/Project/updateTimeTracking`,
+    return request({
+        url: `/Project/updateTimeTracking`,
         method: "PUT",
         data: timeTracking,
-        headers: AUTHORIZATION
 
     })
 }
 export const fetchUpdateEstimateApi = (estimate) => {
-    return axios({
-        url: `${BASE_URL}/Project/updateEstimate`,
+    return request({
+        url: `/Project/updateEstimate`,
         method: "PUT",
         data: estimate,
-        headers: AUTHORIZATION
 
     })
 }
 
 export const fetchUpdateTaskDetailApi = (data) => {
-    return axios({
-        url: `${BASE_URL}/Project/updateTask`,
+    return request({
+        url: `/Project/updateTask`,
         method: "POST",
         data: data,
-        headers: AUTHORIZATION
 
     })
 }
 
 export const fetchRemoveTaskApi = (taskId) => {
-    return axios({
-        url: `${BASE_URL}/Project/removeTask?taskId=${taskId}`,
+    return request({
+        url: `/Project/removeTask?taskId=${taskId}`,
         method: "DELETE",
-        headers: AUTHORIZATION
 
     })
 }
