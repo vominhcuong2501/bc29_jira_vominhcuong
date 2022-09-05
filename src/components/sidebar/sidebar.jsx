@@ -12,33 +12,32 @@ import { openFormCreateTaskAction } from "../../store/actions/modalEditAction";
 const { Sider } = Layout;
 
 export default function Sidebar() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [collapsed, setCollapsed] = useState(true);
   const items = [
     {
-      label: (
-        <Link to="/">
-          Trang chủ
-        </Link>
-      ),
+      label: <Link to="/">Trang chủ</Link>,
       key: "1",
       icon: <LaptopOutlined style={{ fontSize: 20 }} />,
     },
     {
       label: (
-        <a onClick={() => dispatch(openFormCreateTaskAction())}>
-          Create task
-        </a>
+        <a onClick={() => dispatch(openFormCreateTaskAction())}>Create task</a>
       ),
       key: "2",
       icon: <PlusOutlined style={{ fontSize: 20 }} />,
     },
     {
-      label: "Search",
+      label: (
+        <a data-toggle="modal" data-target="#searchModal">
+          Search task
+        </a>
+      ),
       key: "3",
       icon: <SearchOutlined style={{ fontSize: 20 }} />,
     },
   ];
+
   return (
     <Sider
       collapsible

@@ -68,7 +68,7 @@ export default function FormEditProject() {
   };
 
   return (
-    <div className="d-flex flex-column mt-3 justify-content-center align-items-center">
+    <div >
       <Form
         layout="vertical"
         form={form}
@@ -80,7 +80,7 @@ export default function FormEditProject() {
         }}
       >
         <div className="row">
-          <div className="col-lg-4 col-12">
+          <div className="col-lg-6 col-12">
             <Form.Item
               name="id"
               label="Project ID"
@@ -95,7 +95,7 @@ export default function FormEditProject() {
               <Input size="large" disabled />
             </Form.Item>
           </div>
-          <div className="col-lg-4 col-12">
+          <div className="col-lg-6 col-12">
             <Form.Item
               name="projectName"
               label="Project name"
@@ -110,7 +110,7 @@ export default function FormEditProject() {
               <Input size="large" />
             </Form.Item>
           </div>
-          <div className="col-lg-4 col-12">
+          <div className=" col-12">
             <Form.Item
               name="categoryId"
               label="Project Category"

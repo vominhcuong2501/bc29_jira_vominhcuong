@@ -5,7 +5,7 @@ import FormCreateProject from "../../modules/form-create-project/form-create-pro
 export default function CreateProject() {
 
   return (
-    <div className="container">
+    <div>
       <FormCreateProject />
     </div>
   );

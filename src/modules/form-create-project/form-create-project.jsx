@@ -64,7 +64,7 @@ export default function FormCreateProject() {
   };
 
   return (
-    <div className="d-flex flex-column mt-5 justify-content-center align-items-center">
+    <div className="text-center">
       <h3 className="mb-3">Create project</h3>
       <Form
         layout="vertical"
@@ -144,7 +144,7 @@ export default function FormCreateProject() {
           {() => {
             return (
               <Button
-              className="text-light"
+              className="text-light text-right"
                 style={{ backgroundColor: "#065fd4" }}
                 htmlType="submit"
                 disabled={

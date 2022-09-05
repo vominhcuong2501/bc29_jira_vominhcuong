@@ -17,7 +17,7 @@ export default function ModalProject() {
     <>
       <Drawer
         title={title}
-        width={720}
+        width={550}
         onClose={onClose}
         visible={visible}
         bodyStyle={{

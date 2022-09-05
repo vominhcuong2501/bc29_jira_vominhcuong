@@ -9,15 +9,17 @@ import {
 import parse from "html-react-parser";
 import {
   changeTaskModal,
+  getTaskDetailAction,
   selectedUserTaskAction,
 } from "../../store/actions/taskAction";
 import { Editor } from "@tinymce/tinymce-react";
 import { CHANGE_TASK_MODAL } from "../../store/types/taskType";
 import { fetchGetProjectDetailApi } from "../../services/project";
 import { getProjectDetailAction } from "../../store/actions/projectAction";
-import { Select, notification } from "antd";
+import { Select, notification, Space, Input } from "antd";
 import {
   fetchRemoveTaskApi,
+  fetchTaskDetailApi,
   fetchUpdateDesciptionApi,
   fetchUpdateEstimateApi,
   fetchUpdatePriorityApi,
@@ -31,8 +33,11 @@ import {
   fetchGetCommentApi,
   fetchUpdateCommentApi,
 } from "../../services/comment";
+// import Search from "antd/lib/transfer/search";
 
 export default function TaskDetailModal() {
+  const { Search } = Input;
+
   const dispatch = useDispatch();
 
   const { taskDetailModal } = useSelector((state) => state.taskReducer);
@@ -48,6 +53,8 @@ export default function TaskDetailModal() {
   const [taskName, setTaskName] = useState();
 
   const [typeId, setTypeId] = useState();
+
+  const [searchTask, setSearchTask] = useState();
 
   const [user, setUser] = useState();
 
@@ -76,7 +83,6 @@ export default function TaskDetailModal() {
     setTaskName(taskDetailModal.taskName);
     setTypeId(taskDetailModal.typeId);
   }, [taskDetailModal]);
-
   const { state: status = [] } = useAsync({
     service: () => fetchGetStatusApi(),
   });
@@ -269,6 +275,27 @@ export default function TaskDetailModal() {
       </div>
     );
   };
+console.log(projectDetail);
+  const onSearch = (value) => {
+    let search = taskDetailModal.lstTask?.map((ele) => {
+      return ele.lstTaskDeTail.filter((ele) => {
+        return (
+          ele.taskName
+            .toLowerCase()
+            .trim()
+            .indexOf(value.toLowerCase().trim()) !== -1
+        );
+      });
+    });
+
+    if (search) {
+      setSearchTask(search);
+    } else {
+      notification.warning({
+        message: "No result !!!!",
+      });
+    }
+  };
 
   return (
     <div>
@@ -283,10 +310,15 @@ export default function TaskDetailModal() {
         <div className="modal-dialog modal-search">
           <div className="modal-content">
             <div className="modal-header">
-              <div className="search-block">
-                <input className="search" />
-                <i className="fa fa-search" />
-              </div>
+              <Space direction="vertical">
+                <Search
+                  placeholder="Enter task name"
+                  onSearch={onSearch}
+                  enterButton
+                  name="keyword"
+                  allowClear
+                />
+              </Space>
               <button
                 type="button"
                 className="close"
@@ -297,16 +329,43 @@ export default function TaskDetailModal() {
               </button>
             </div>
             <div className="modal-body">
-              <p>RECENT ISSUES</p>
-              <div style={{ display: "flex" }}>
-                <div className="icon">
-                  <i className="fa fa-bookmark" />
-                </div>
-                <div>
-                  <p>cyberlearn</p>
-                  <p>BUG-238066</p>
-                </div>
-              </div>
+              <p>RECENT TASK</p>
+              {projectDetail.lstTask?.map((ele) => {
+                return ele.lstTaskDeTail.map((ele) => {
+                  return (
+                    <div
+                      style={{ display: "flex" }}
+                      key={ele.taskName}
+                      data-toggle="modal"
+                      data-target="#infoModal"
+                      onClick={async () => {
+                        const result = await fetchTaskDetailApi(ele.taskId);
+                        dispatch(getTaskDetailAction(result.data.content));
+                      }}
+                    >
+                      {ele.taskTypeDetail.id === 1 ? (
+                        <div className="icon">
+                          <i
+                            className="fas fa-exclamation text-danger"
+                            style={{ marginRight: 6 }}
+                          ></i>
+                        </div>
+                      ) : (
+                        <div className="icon">
+                          <i className="fa fa-bookmark" />
+                        </div>
+                      )}
+
+                      <div>
+                        <p>{ele.taskName}</p>
+                        <p style={{ fontSize: 13 }}>
+                          {ele.taskTypeDetail.taskType}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                });
+              })}
             </div>
           </div>
         </div>
@@ -324,7 +383,7 @@ export default function TaskDetailModal() {
             <div className="modal-header pb-0">
               <div className="taskType task-title d-flex align-items-center">
                 <p className="mr-2 text-warning font-weight-bold mb-0">
-                  <i className="fas fa-bookmark"></i>
+                  <i className="fas fa-tasks text-danger"></i>
                 </p>
                 <select
                   className="custom-select"
@@ -555,7 +614,7 @@ export default function TaskDetailModal() {
                                             try {
                                               await fetchUpdateCommentApi(
                                                 commentId,
-                                                commentEdit,
+                                                commentEdit
                                               );
                                               notification.success({
                                                 description: "Successfully !",
@@ -784,12 +843,6 @@ export default function TaskDetailModal() {
                         TIME TRACKING
                       </h6>
                       {renderTimeTracking()}
-                    </div>
-                    <div style={{ color: "#929398" }}>
-                      Create at a month ago
-                    </div>
-                    <div style={{ color: "#929398" }}>
-                      Update at a few seconds ago
                     </div>
                   </div>
                 </div>

@@ -238,8 +238,8 @@ export default function TableManagement() {
     },
   ];
   return (
-    <div className="container mx-5">
-      <h3 className="my-3 font-weight-bold">Project management</h3>
+    <div className="text-center">
+      <h3 className="my-3 font-weight-bold">User management</h3>
       <Table
         className="table m-0"
         rowKey={"userId"}

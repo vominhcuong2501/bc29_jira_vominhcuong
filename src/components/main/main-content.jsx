@@ -6,6 +6,7 @@ import { fetchGetProjectDetailApi } from "../../services/project";
 import { fetchTaskDetailApi, fetchUpdateStatusApi } from "../../services/task";
 import { getProjectDetailAction } from "../../store/actions/projectAction";
 import { getTaskDetailAction } from "../../store/actions/taskAction";
+import "./main.scss"
 
 export default function MainContent(props) {
   const dispatch = useDispatch();
