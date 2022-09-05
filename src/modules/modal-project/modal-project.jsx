@@ -23,7 +23,6 @@ export default function ModalProject() {
         bodyStyle={{
           paddingBottom: 80,
         }}
-        
       >
         {componentModalContent}
       </Drawer>

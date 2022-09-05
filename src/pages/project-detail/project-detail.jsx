@@ -6,6 +6,7 @@ import MainInfo from "../../components/main/main-info";
 import { fetchGetProjectDetailApi } from "../../services/project";
 import { useDispatch, useSelector } from "react-redux";
 import { getProjectDetailAction } from "../../store/actions/projectAction";
+import { notification } from "antd";
 
 export default function ProjectDetail() {
   
@@ -23,8 +24,13 @@ export default function ProjectDetail() {
     try {
       const result = await fetchGetProjectDetailApi(params.projectId);
       dispatch(getProjectDetailAction(result.data.content));
+      notification.success({
+        description: "Successfully !"
+      })
     } catch (error) {
-      console.log(error);
+      notification.error({
+        message: error.response.data.content
+      });
     }
   };
 

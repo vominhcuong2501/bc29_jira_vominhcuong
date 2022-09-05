@@ -1,13 +1,8 @@
 import React from "react";
 import parse from 'html-react-parser';
-import { useSelector } from "react-redux";
-import { notification, Space } from "antd";
-import Search from "antd/lib/transfer/search";
-import { useState } from "react";
 
 export default function MainInfo(props) {
   const { members, projectName, description, lstTask } = props.projectDetail;
-  const [searchTaskName, setSearchTaskName] = useState()
 const descriptionHtml = parse(`${description}`)
   const renderAvatar = () => {
     return members?.map((user) => {

@@ -13,8 +13,11 @@ import { getUserListAction } from "../../store/actions/userAction";
 import { closeEditModalAction } from "../../store/actions/modalEditAction";
 
 export default function FormEditUser() {
+
   const dispatch = useDispatch()
+
   const [form] = Form.useForm();
+  
   const { userEdit } = useSelector((state) => state.userReducer);
 
   useEffect(() => {

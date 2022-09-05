@@ -8,10 +8,12 @@ import { USER_LOGIN_KEY } from "../../constans/common";
 import { useNavigate } from "react-router-dom";
 
 export default function FormLogin() {
+
   const dispatch = useDispatch();
+
   const navigate = useNavigate();
+
   const [form] = Form.useForm();
-  
 
   const handleSubmit = async (values) => {
     try {
@@ -108,7 +110,6 @@ export default function FormLogin() {
           );
         }}
       </Form.Item>
-
       <div className="text-center">
         <Button
           style={{

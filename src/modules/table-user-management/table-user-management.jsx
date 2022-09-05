@@ -28,7 +28,6 @@ export default function TableManagement() {
     fetchGetUserList();
   }, []);
 
-  // call api render table
   const fetchGetUserList = async () => {
     setLoadingState({ isLoading: true });
     const result = await getUserListApi();
@@ -36,19 +35,23 @@ export default function TableManagement() {
     dispatch(getUserListAction(result.data.content));
   };
 
-  // các tính năng của table
   const [searchText, setSearchText] = useState("");
+
   const [searchedColumn, setSearchedColumn] = useState("");
+
   const searchInput = useRef(null);
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
+
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
   };
+
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -149,7 +152,6 @@ export default function TableManagement() {
       });
       fetchGetUserList();
     } catch (err) {
-      console.log(err);
       notification.error({
         message: err.response.data.content,
       });

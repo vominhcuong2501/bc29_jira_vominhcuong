@@ -10,12 +10,17 @@ import { closeEditModalAction } from "../../store/actions/modalEditAction";
 import { setTableAction } from "../../store/actions/projectAction";
 
 export default function FormEditProject() {
+
   const [form] = Form.useForm();
+
   const dispatch = useDispatch();
+
   const { projectEdit, table } = useSelector((state) => state.projectReducer);
+
   const { state: arrProject = [] } = useAsync({
     service: () => fetchProjectCategoryApi(),
   });
+
   const editorRef = useRef(null);
 
   useEffect(() => {
@@ -34,7 +39,6 @@ export default function FormEditProject() {
     };
     try {
       await fetchUpdateProjectApi(projectUpdate);
-
       notification.success({
         description: "Successfully !",
       });

@@ -12,11 +12,8 @@ export const useAsync = ({ dependencies = [], service, condition = true }) => {
 
   const fetchData = async () => {
     setLoadingState({ isLoading: true });
-    // call api
     const result = await service();
-    //end api
     setLoadingState({ isLoading: false });
-
     setState(result.data.content)
   };
   return { state }

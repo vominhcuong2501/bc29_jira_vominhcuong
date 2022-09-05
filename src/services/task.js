@@ -5,7 +5,6 @@ export const fetchCreateTaskApi = (data) => {
         url: `/Project/createTask`,
         method: "POST",
         data: data,
-
     })
 }
 export const fetchTaskDetailApi = (taskId) => {
@@ -21,7 +20,6 @@ export const fetchUpdateStatusApi = (status) => {
         url: `/Project/updateStatus`,
         method: "PUT",
         data: status,
-
     })
 }
 export const fetchUpdatePriorityApi = (priority) => {
@@ -29,7 +27,6 @@ export const fetchUpdatePriorityApi = (priority) => {
         url: `/Project/updatePriority`,
         method: "PUT",
         data: priority,
-
     })
 }
 export const fetchUpdateDesciptionApi = (desciption) => {
@@ -37,7 +34,6 @@ export const fetchUpdateDesciptionApi = (desciption) => {
         url: `/Project/updateDescription`,
         method: "PUT",
         data: desciption,
-
     })
 }
 export const fetchUpdateTimeTrackingApi = (timeTracking) => {
@@ -45,7 +41,6 @@ export const fetchUpdateTimeTrackingApi = (timeTracking) => {
         url: `/Project/updateTimeTracking`,
         method: "PUT",
         data: timeTracking,
-
     })
 }
 export const fetchUpdateEstimateApi = (estimate) => {
@@ -53,7 +48,6 @@ export const fetchUpdateEstimateApi = (estimate) => {
         url: `/Project/updateEstimate`,
         method: "PUT",
         data: estimate,
-
     })
 }
 
@@ -62,7 +56,6 @@ export const fetchUpdateTaskDetailApi = (data) => {
         url: `/Project/updateTask`,
         method: "POST",
         data: data,
-
     })
 }
 
@@ -70,6 +63,5 @@ export const fetchRemoveTaskApi = (taskId) => {
     return request({
         url: `/Project/removeTask?taskId=${taskId}`,
         method: "DELETE",
-
     })
 }

@@ -49,7 +49,6 @@ export default function TableManagement() {
     fetchGetAllProject();
   }, []);
 
-  // call api render table
   const fetchGetAllProject = async () => {
     setLoadingState({ isLoading: true });
     const result = await fetchGetAllProjectApi();
@@ -57,19 +56,23 @@ export default function TableManagement() {
     dispatch(getTableAction(result.data.content));
   };
 
-  // các tính năng của table
   const [searchText, setSearchText] = useState("");
+
   const [searchedColumn, setSearchedColumn] = useState("");
+
   const searchInput = useRef(null);
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
+
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
   };
+
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -170,7 +173,6 @@ export default function TableManagement() {
       });
       fetchGetAllProject();
     } catch (err) {
-      console.log(err);
       notification.error({
         message: err.response.data.content,
       });
@@ -232,7 +234,6 @@ export default function TableManagement() {
     },
     {
       title: "Creator",
-      //   dataIndex: "creator",
       key: "creator",
       sortDirections: ["descend"],
       sorter: (item2, item1) => {

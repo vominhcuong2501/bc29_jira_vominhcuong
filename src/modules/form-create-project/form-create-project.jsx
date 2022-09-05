@@ -55,12 +55,10 @@ export default function FormCreateProject() {
       })
       navigate("/")
     } catch(err) {
-      console.log(err);
       notification.error({
         message: err.response.data.content
       })
     }
-    console.log(project);
   };
 
   return (

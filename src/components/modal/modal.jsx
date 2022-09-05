@@ -50,7 +50,7 @@ export default function TaskDetailModal() {
 
   const [content, setContent] = useState(taskDetailModal.description);
 
-  const [taskName, setTaskName] = useState();
+  const [newTaskName, setNewTaskName] = useState();
 
   const [typeId, setTypeId] = useState();
 
@@ -80,7 +80,7 @@ export default function TaskDetailModal() {
         return { value: ele.id, label: ele.name };
       })
     );
-    setTaskName(taskDetailModal.taskName);
+    setNewTaskName(taskDetailModal.taskName);
     setTypeId(taskDetailModal.typeId);
   }, [taskDetailModal]);
   const { state: status = [] } = useAsync({
@@ -275,7 +275,6 @@ export default function TaskDetailModal() {
       </div>
     );
   };
-console.log(projectDetail);
   const onSearch = (value) => {
     let search = taskDetailModal.lstTask?.map((ele) => {
       return ele.lstTaskDeTail.filter((ele) => {
@@ -405,7 +404,6 @@ console.log(projectDetail);
                         name: "typeId",
                         value: e.target.value,
                       });
-                      // document.getElementById("close").click();
                       setProjectDetail();
                     } catch (error) {
                       notification.error({
@@ -437,6 +435,7 @@ console.log(projectDetail);
                       notification.success({
                         description: "Successfully !",
                       });
+                      document.getElementById("close").click();
                       setProjectDetail();
                     } catch (error) {
                       notification.error({
@@ -466,33 +465,34 @@ console.log(projectDetail);
                           <input
                             type="text"
                             className="form-control"
-                            value={taskName}
+                            value={newTaskName}
                             onChange={(e) => {
-                              setTaskName(e.target.value);
+                              setNewTaskName(e.target.value);
                             }}
                           />
                           <div className="input-group-append">
                             <button className="btn btn-outline-success">
                               <i
                                 onClick={async () => {
+                                  
                                   try {
                                     await fetchUpdateTaskDetailApi({
                                       ...taskDetailModal,
-                                      taskName: taskName,
+                                      taskName: newTaskName,
+                                      listUserAsign: assign,
                                     });
                                     notification.success({
                                       description: "Successfully !",
                                     });
-                                    document.getElementById("close").click();
                                     dispatch({
                                       type: CHANGE_TASK_MODAL,
-                                      value: taskName,
+                                      value: newTaskName,
                                       name: "taskName",
                                     });
                                     setProjectDetail();
                                   } catch (error) {
                                     notification.error({
-                                      message: error.response.data.content,
+                                      message: error.response.message,
                                     });
                                   }
                                   setVisibleTaskName(false);
@@ -746,7 +746,6 @@ console.log(projectDetail);
                               try {
                                 await fetchUpdateTaskDetailApi({
                                   ...taskDetailModal,
-                                  taskId: taskDetailModal.taskId.toString(),
                                   listUserAsign: values,
                                 });
                                 notification.success({

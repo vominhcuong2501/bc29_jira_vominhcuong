@@ -19,7 +19,6 @@ export const fetchDeleteProjectApi = (id) => {
     return request({
         url: `/Project/deleteProject?projectId=${id}`,
         method: "DELETE",
-
     })
 }
 

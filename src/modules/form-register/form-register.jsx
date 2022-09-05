@@ -10,7 +10,9 @@ import { fetchUserRegister } from "../../services/user";
 import { useNavigate } from "react-router-dom";
 
 export default function FromRegister() {
+
   const navigate = useNavigate();
+  
   const [form] = Form.useForm();
 
   const handleSubmit = async (values) => {

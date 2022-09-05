@@ -33,16 +33,13 @@ export const taskReducer = (state = DEFAULT_STATE, action) => {
         case SELECTED_USER: {
             return { ...state, selectedUser: action.payload }
         }
-
         case GET_TASK_DETAIL: {
             return { ...state, taskDetailModal: action.payload }
         }
-
         case CHANGE_TASK_MODAL: {
             const { name, value } = action
             return { ...state, taskDetailModal: { ...state.taskDetailModal, [name]: value } }
         }
-
         default:
             return { ...state };
     }

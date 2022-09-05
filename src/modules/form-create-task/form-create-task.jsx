@@ -33,8 +33,6 @@ export default function FormCreateTask() {
 
   const dispatch = useDispatch();
 
-  const navigate = useNavigate();
-
   const [size, setSize] = useState("middle");
 
   const { arrProject } = useSelector((state) => state.projectReducer);
@@ -45,7 +43,6 @@ export default function FormCreateTask() {
 
   const editorRef = useRef(null);
 
-  // set timeTracking
   const [timeTracking, setTimeTracking] = useState({
     timeTrackingSpent: 0,
     timeTrackingRemaining: 0,
@@ -81,7 +78,6 @@ export default function FormCreateTask() {
     };
     try {
       await fetchCreateTaskApi(task);
-      navigate("/");
       dispatch(closeEditModalAction());
       notification.success({
         description: "Successfully !",

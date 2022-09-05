@@ -8,7 +8,6 @@ const DEFAULT_STATE = {
 
 export const modalEditProjectReducer = (state = DEFAULT_STATE, action) => {
     switch (action.type) {
-
         case CLOSE_MODAL_EDIT: {
             return { ...state, visible: false }
         }

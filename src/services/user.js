@@ -21,7 +21,6 @@ export const getUserApi = (keyWord) => {
     return request({
         url: `/Users/getUser?keyword=${keyWord}`,
         method: "GET",
-
     })
 }
 
@@ -29,7 +28,6 @@ export const getUserListApi = () => {
     return request({
         url: `/Users/getUser`,
         method: "GET",
-
     })
 }
 
@@ -37,7 +35,6 @@ export const getUserDetailApi = (id) => {
     return request({
         url: `/Users/getUser?id=${id}`,
         method: "GET",
-
     })
 }
 
@@ -46,7 +43,6 @@ export const removeUserProjectApi = (userDelete) => {
         url: `/Project/removeUserFromProject`,
         method: "POST",
         data: userDelete,
-
     })
 }
 
@@ -61,7 +57,6 @@ export const fetchDeleteUserApi = (userId) => {
     return request({
         url: `/Users/deleteUser?id=${userId}`,
         method: "DELETE",
-
     })
 }
 

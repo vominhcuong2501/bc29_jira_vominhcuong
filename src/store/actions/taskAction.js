@@ -1,7 +1,5 @@
 import { CHANGE_TASK_MODAL, GET_TASK_DETAIL, SELECTED_USER } from "../types/taskType"
 
-
-
 export const selectedUserTaskAction = (data) => {
     return ({
         type: SELECTED_USER,

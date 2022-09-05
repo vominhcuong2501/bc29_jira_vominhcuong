@@ -22,19 +22,15 @@ export const userReducer = (state = DEFAULT_STATE, { type, payload }) => {
       state.userInfo = payload;
       return { ...state };
     }
-    
     case GET_USER: {
       return {...state, userSearch: payload}
     }
-
     case GET_USER_BY_PROJECT: {
       return {...state, userByProject: payload}
     }
-
     case GET_USER_LIST: {
       return {...state, arrUser: payload}
     }
-
     case EDIT_USER: {
       return {...state, userEdit: payload}
     }

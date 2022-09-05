@@ -9,6 +9,7 @@ export default function Register() {
     width: window.innerWidth,
     height: window.innerHeight,
   });
+  
   useEffect(() => {
     window.onresize = () => {
       setSize({
