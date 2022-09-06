@@ -26,7 +26,7 @@ export default function FormLogin() {
       navigate("/");
     } catch (err) {
       notification.error({
-        message: err.response.data.content,
+        message: err.response.data?.content,
       });
     }
   };
