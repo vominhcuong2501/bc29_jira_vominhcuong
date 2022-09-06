@@ -10,7 +10,7 @@ export default function Header() {
   const dispatch = useDispatch();
   const { userInfo } = useSelector((state) => state.userReducer);
   return (
-    <div className="w-100 p-3">
+    <div className="w-100 p-2">
       <div className="d-flex justify-content-end align-items-center">
         <div className="avatar mr-2">
           <img src={userInfo?.avatar} alt={userInfo?.avatar} />

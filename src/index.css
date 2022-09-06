@@ -93,14 +93,14 @@ body {
 /* Menu */
 .menu {
   height: 100vh;
-  width: 17%;
+  width: 15%;
   background-color: #f4f5f7;
+  margin: 0 auto;
 }
 
 .menu .account {
   display: flex;
   padding: 5% 12%;
-  margin-bottom: 5%;
 }
 
 .menu .account .avatar {
@@ -154,9 +154,8 @@ body {
 }
 
 .menu .feature {
-  padding: 0% 10%;
+  padding: 0% 5%;
   text-align: left;
-  margin-bottom: 8%;
 }
 
 .menu .feature div {
@@ -173,9 +172,6 @@ body {
   font-size: 14px;
 }
 
-.main {
-  padding-left: 2%;
-}
 .main .header .breadcrumb {
   margin-bottom: 0;
   padding-left: 0px;

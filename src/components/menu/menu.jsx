@@ -4,18 +4,45 @@ import { UserOutlined } from "@ant-design/icons";
 import "./menu.scss";
 
 export default function Menu() {
+  const styleMenu = {
+    display: "flex",
+    flexDirection: "column",
+  };
   return (
-    <div className="menu" style={{ height: window.innerHeight }}>
-      <div className="account d-flex align-items-center mt-3">
-        <div className="avatar p-0">
-          <img src={require("../../assets/img/download.jfif")} alt="avatar" />
-        </div>
-        <div className="account-info p-0">
-          <h5 className="font-weight-bold text-warning m-0">CyberBugs</h5>
-        </div>
-      </div>
-      <div className="control">
-        <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
+    <nav
+      className="menu navbar-expand-md navbar-light bg-light"
+      style={{ height: window.innerHeight }}
+    >
+      <button
+        className="navbar-toggler d-lg-none"
+        type="button"
+        data-toggle="collapse"
+        data-target="#collapsibleNavId"
+        aria-controls="collapsibleNavId"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span className="navbar-toggler-icon" />
+      </button>
+      <div className="collapse navbar-collapse" id="collapsibleNavId" >
+        <ul className="navbar-nav mr-auto my-3" style={styleMenu}>
+          <li className="nav-item ">
+            <NavLink
+              className="nav-link account d-flex align-items-center m-0"
+              style={{ textDecoration: "none" }}
+              to="/"
+            >
+              <div className="avatar p-0">
+                <img
+                  src={require("../../assets/img/download.jfif")}
+                  alt="avatar"
+                />
+              </div>
+              <div className="account-info p-0">
+                <h5 className="font-weight-bold text-warning m-0">CyberBugs</h5>
+              </div>
+            </NavLink>
+          </li>
           <li className="nav-item d-flex align-items-center active">
             <i className="mr-2 fas fa-tasks"></i>
             <NavLink
@@ -48,11 +75,7 @@ export default function Menu() {
               User management
             </NavLink>
           </li>
-        </ul>
-      </div>
-      <div className="feature">
-        <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
-          <li className="nav-item d-flex align-items-center active">
+          <li className="nav-item d-flex align-items-center feature" style={{borderTop: "2px dashed black"}}>
             <i className="mr-2 fa fa-truck" />
             <a
               className="nav-link text-dark"
@@ -61,7 +84,7 @@ export default function Menu() {
               Releases
             </a>
           </li>
-          <li className="nav-item d-flex align-items-center ">
+          <li className="nav-item d-flex align-items-center feature ">
             <i className="mr-2 fa fa-equals" />
 
             <a
@@ -71,7 +94,7 @@ export default function Menu() {
               Issues and filters
             </a>
           </li>
-          <li className="nav-item d-flex align-items-center ">
+          <li className="nav-item d-flex align-items-center feature ">
             <i className="mr-2 fa fa-paste" />
 
             <a
@@ -81,7 +104,7 @@ export default function Menu() {
               Pages
             </a>
           </li>
-          <li className="nav-item d-flex align-items-center ">
+          <li className="nav-item d-flex align-items-center feature ">
             <i className="mr-2 fa fa-location-arrow" />
 
             <a
@@ -91,7 +114,7 @@ export default function Menu() {
               Reports
             </a>
           </li>
-          <li className="nav-item d-flex align-items-center ">
+          <li className="nav-item d-flex align-items-center feature ">
             <i className="mr-2 fa fa-box" />
 
             <a
@@ -103,6 +126,6 @@ export default function Menu() {
           </li>
         </ul>
       </div>
-    </div>
+    </nav>
   );
 }

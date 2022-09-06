@@ -265,7 +265,7 @@ export default function FormCreateTask() {
               </div>
             </Form.Item>
           </div>
-          <div className="col-6 ">
+          <div className="col-md-6 col-12 ">
             <Form.Item
               name="originalEstimate"
               label="Original estimate"
@@ -280,7 +280,7 @@ export default function FormCreateTask() {
               <InputNumber type="number" size="large" />
             </Form.Item>
           </div>
-          <div className="col-3 p-0">
+          <div className="col-md-3 col-6 p-0">
             <Form.Item
               name="timeTrackingSpent"
               label="Time spent"
@@ -305,7 +305,7 @@ export default function FormCreateTask() {
               />
             </Form.Item>
           </div>
-          <div className="col-3 p-0">
+          <div className="col-md-3 col-6 p-0">
             <Form.Item
               name="timeTrackingRemaining"
               label="Time remaining"

@@ -43,11 +43,11 @@ export default function MainContent(props) {
       <DragDropContext onDragEnd={handleDragEnd}>
         {lstTask?.map((ele, index) => {
           return (
-            <Droppable droppableId={ele.statusId} key={ele.statusId}>
+            <Droppable droppableId={ele.statusId} key={ele.statusId} className="col-lg-4 col-md-6 col-12">
               {(provided) => {
                 return (
                   <div
-                    className="card "
+                    className="card mt-3"
                     style={{ height: "auto", width: "17rem" }}
                   >
                     <div className="card-header">{ele.statusName}</div>
@@ -137,7 +137,7 @@ export default function MainContent(props) {
 
   return (
     <div className="container p-0">
-      <div className="content" style={{ display: "flex" }}>
+      <div className="content row" style={{ display: "flex", justifyContent: "center" }}>
         {renderCardTaskList()}
       </div>
     </div>

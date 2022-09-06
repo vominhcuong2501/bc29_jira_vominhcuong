@@ -33,7 +33,6 @@ import {
   fetchGetCommentApi,
   fetchUpdateCommentApi,
 } from "../../services/comment";
-// import Search from "antd/lib/transfer/search";
 
 export default function TaskDetailModal() {
   const { Search } = Input;
@@ -83,19 +82,24 @@ export default function TaskDetailModal() {
     setNewTaskName(taskDetailModal.taskName);
     setTypeId(taskDetailModal.typeId);
   }, [taskDetailModal]);
+
   const { state: status = [] } = useAsync({
     service: () => fetchGetStatusApi(),
   });
+
   const { state: priority = [] } = useAsync({
     service: () => fetchGetPriorityApi(),
   });
+
   const { state: taskType = [] } = useAsync({
     service: () => fetchGetTaskTypeApi(),
   });
+
   const { state: commentList = [] } = useAsync({
     service: () => fetchGetCommentApi(taskDetailModal.taskId),
     dependencies: [taskDetailModal],
   });
+
   const setProjectDetail = async () => {
     const result = await fetchGetProjectDetailApi(taskDetailModal.projectId);
     dispatch(getProjectDetailAction(result.data.content));
@@ -275,6 +279,7 @@ export default function TaskDetailModal() {
       </div>
     );
   };
+
   const onSearch = (value) => {
     let search = taskDetailModal.lstTask?.map((ele) => {
       return ele.lstTaskDeTail.filter((ele) => {
@@ -458,7 +463,7 @@ export default function TaskDetailModal() {
             <div className="modal-body">
               <div className="container-fluid">
                 <div className="row">
-                  <div className="col-8">
+                  <div className="col-lg-8 col-12">
                     <h3 className="taskName font-weight-bold mt-3 mb-4">
                       {visibleTaskName ? (
                         <div className="input-group mb-3">
@@ -471,34 +476,39 @@ export default function TaskDetailModal() {
                             }}
                           />
                           <div className="input-group-append">
-                            <button className="btn btn-outline-success">
-                              <i
-                                onClick={async () => {
-                                  
-                                  try {
-                                    await fetchUpdateTaskDetailApi({
-                                      ...taskDetailModal,
-                                      taskName: newTaskName,
-                                      listUserAsign: assign,
-                                    });
-                                    notification.success({
-                                      description: "Successfully !",
-                                    });
-                                    dispatch({
-                                      type: CHANGE_TASK_MODAL,
-                                      value: newTaskName,
-                                      name: "taskName",
-                                    });
-                                    setProjectDetail();
-                                  } catch (error) {
-                                    notification.error({
-                                      message: error.response.message,
-                                    });
-                                  }
-                                  setVisibleTaskName(false);
-                                }}
-                                className="fas fa-check"
-                              ></i>
+                            <button
+                              className="btn btn-outline-success"
+                              onClick={async () => {
+                                console.log({
+                                  ...taskDetailModal,
+                                  taskName: newTaskName,
+                                  listUserAsign: assign,
+                                });
+                                try {
+                                  await fetchUpdateTaskDetailApi({
+                                    ...taskDetailModal,
+                                    taskName: newTaskName,
+                                    listUserAsign: assign,
+                                  });
+                                  notification.success({
+                                    description: "Successfully !",
+                                  });
+                                  dispatch({
+                                    type: CHANGE_TASK_MODAL,
+                                    value: newTaskName,
+                                    name: "taskName",
+                                  });
+                                  setProjectDetail();
+                                } catch (error) {
+                                  console.log(error);
+                                  notification.error({
+                                    message: error.response.message,
+                                  });
+                                }
+                                setVisibleTaskName(false);
+                              }}
+                            >
+                              <i className="fas fa-check"></i>
                             </button>
                             <button className="btn btn-outline-danger">
                               <i
@@ -692,7 +702,7 @@ export default function TaskDetailModal() {
                       </div>
                     </div>
                   </div>
-                  <div className="col-4">
+                  <div className="col-lg-4 col-12">
                     <div className="status">
                       <h6 className="text-warning font-weight-bold">STATUS</h6>
                       <select

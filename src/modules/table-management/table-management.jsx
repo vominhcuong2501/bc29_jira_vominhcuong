@@ -410,9 +410,8 @@ export default function TableManagement() {
   ];
   return (
     <div className="text-center">
-      <h3 className="my-3 font-weight-bold">Project management</h3>
+      <h3 className="mb-3 font-weight-bold">Project management</h3>
       <Table
-        className="table"
         rowKey={"id"}
         columns={columns}
         dataSource={table}
