@@ -110,7 +110,7 @@ export default function FormLogin() {
           );
         }}
       </Form.Item>
-      <div className="text-center">
+      {/* <div className="text-center">
         <Button
           style={{
             backgroundColor: "#065fd4",
@@ -132,7 +132,7 @@ export default function FormLogin() {
         >
           <i className="fab fa-twitter" style={{ fontSize: 20 }}></i>
         </Button>
-      </div>
+      </div> */}
     </Form>
   );
 }
