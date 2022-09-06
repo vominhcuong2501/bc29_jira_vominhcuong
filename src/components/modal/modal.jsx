@@ -479,11 +479,6 @@ export default function TaskDetailModal() {
                             <button
                               className="btn btn-outline-success"
                               onClick={async () => {
-                                console.log({
-                                  ...taskDetailModal,
-                                  taskName: newTaskName,
-                                  listUserAsign: assign,
-                                });
                                 try {
                                   await fetchUpdateTaskDetailApi({
                                     ...taskDetailModal,
@@ -500,7 +495,6 @@ export default function TaskDetailModal() {
                                   });
                                   setProjectDetail();
                                 } catch (error) {
-                                  console.log(error);
                                   notification.error({
                                     message: error.response.message,
                                   });
