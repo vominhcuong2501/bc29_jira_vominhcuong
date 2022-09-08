@@ -152,6 +152,7 @@ export default function TaskDetailModal() {
               value={taskDetailModal.timeTrackingSpent}
               onChange={async (e) => {
                 const { value, name } = e.target;
+                dispatch(changeTaskModal(value, name));
                 try {
                   await fetchUpdateTimeTrackingApi({
                     taskId: taskDetailModal.taskId,
@@ -162,7 +163,6 @@ export default function TaskDetailModal() {
                   notification.success({
                     description: "Successfully !",
                   });
-                  dispatch(changeTaskModal(value, name));
                   setProjectDetail();
                 } catch (error) {
                   notification.error({
@@ -181,6 +181,7 @@ export default function TaskDetailModal() {
               value={taskDetailModal.timeTrackingRemaining}
               onChange={async (e) => {
                 const { value, name } = e.target;
+                dispatch(changeTaskModal(value, name));
                 try {
                   await fetchUpdateTimeTrackingApi({
                     taskId: taskDetailModal.taskId,
@@ -190,7 +191,6 @@ export default function TaskDetailModal() {
                   notification.success({
                     description: "Successfully !",
                   });
-                  dispatch(changeTaskModal(value, name));
                   setProjectDetail();
                 } catch (error) {
                   notification.error({
@@ -281,15 +281,13 @@ export default function TaskDetailModal() {
   };
 
   const onSearch = (value) => {
-    let search = taskDetailModal.lstTask?.map((ele) => {
-      return ele.lstTaskDeTail.filter((ele) => {
-        return (
-          ele.taskName
-            .toLowerCase()
-            .trim()
-            .indexOf(value.toLowerCase().trim()) !== -1
-        );
-      });
+    let search = taskDetailModal.lstTask?.lstTaskDeTail.filter((ele) => {
+      return (
+        ele.taskName
+          .toLowerCase()
+          .trim()
+          .indexOf(value.toLowerCase().trim()) !== -1
+      );
     });
 
     if (search) {
@@ -395,6 +393,11 @@ export default function TaskDetailModal() {
                   value={typeId}
                   onChange={async (e) => {
                     setTypeId(e.target.value);
+                    dispatch({
+                      type: CHANGE_TASK_MODAL,
+                      name: "typeId",
+                      value: e.target.value,
+                    });
                     try {
                       await fetchUpdateTaskDetailApi({
                         ...taskDetailModal,
@@ -403,11 +406,6 @@ export default function TaskDetailModal() {
                       });
                       notification.success({
                         description: "Successfully !",
-                      });
-                      dispatch({
-                        type: CHANGE_TASK_MODAL,
-                        name: "typeId",
-                        value: e.target.value,
                       });
                       setProjectDetail();
                     } catch (error) {
@@ -479,6 +477,11 @@ export default function TaskDetailModal() {
                             <button
                               className="btn btn-outline-success"
                               onClick={async () => {
+                                dispatch({
+                                  type: CHANGE_TASK_MODAL,
+                                  value: newTaskName,
+                                  name: "taskName",
+                                });
                                 try {
                                   await fetchUpdateTaskDetailApi({
                                     ...taskDetailModal,
@@ -487,11 +490,6 @@ export default function TaskDetailModal() {
                                   });
                                   notification.success({
                                     description: "Successfully !",
-                                  });
-                                  dispatch({
-                                    type: CHANGE_TASK_MODAL,
-                                    value: newTaskName,
-                                    name: "taskName",
                                   });
                                   setProjectDetail();
                                 } catch (error) {
@@ -704,6 +702,11 @@ export default function TaskDetailModal() {
                         name="statusId"
                         value={taskDetailModal.statusId}
                         onChange={async (e) => {
+                          dispatch({
+                            type: CHANGE_TASK_MODAL,
+                            name: "statusId",
+                            value: e.target.value,
+                          });
                           try {
                             await fetchUpdateStatusApi({
                               taskId: taskDetailModal.taskId,
@@ -711,11 +714,6 @@ export default function TaskDetailModal() {
                             });
                             notification.success({
                               description: "Successfully !",
-                            });
-                            dispatch({
-                              type: CHANGE_TASK_MODAL,
-                              name: "statusId",
-                              value: e.target.value,
                             });
                             setProjectDetail();
                           } catch (error) {
@@ -780,6 +778,11 @@ export default function TaskDetailModal() {
                         className="custom-select"
                         value={taskDetailModal.priorityId}
                         onChange={async (e) => {
+                          dispatch({
+                            type: CHANGE_TASK_MODAL,
+                            name: "priorityId",
+                            value: e.target.value,
+                          });
                           try {
                             await fetchUpdatePriorityApi({
                               taskId: taskDetailModal.taskId,
@@ -787,11 +790,6 @@ export default function TaskDetailModal() {
                             });
                             notification.success({
                               description: "Successfully !",
-                            });
-                            dispatch({
-                              type: CHANGE_TASK_MODAL,
-                              name: "priorityId",
-                              value: e.target.value,
                             });
                             setProjectDetail();
                           } catch (error) {
@@ -821,6 +819,7 @@ export default function TaskDetailModal() {
                         value={taskDetailModal.originalEstimate}
                         onChange={async (e) => {
                           const { value, name } = e.target;
+                          dispatch(changeTaskModal(value, name));
                           try {
                             await fetchUpdateEstimateApi({
                               taskId: taskDetailModal.taskId,
@@ -829,7 +828,6 @@ export default function TaskDetailModal() {
                             notification.success({
                               description: "Successfully !",
                             });
-                            dispatch(changeTaskModal(value, name));
                             setProjectDetail();
                           } catch (error) {
                             notification.error({
