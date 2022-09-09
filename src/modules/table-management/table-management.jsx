@@ -209,7 +209,7 @@ export default function TableManagement() {
       title: "Project & Category",
       render: (record) => (
         <React.Fragment>
-          <NavLink className="text-dark" to={`/project-detail/${record.id}`}>
+          <NavLink className="text-primary" to={`/project-detail/${record.id}`}>
             {record.projectName}
           </NavLink>
           <br />

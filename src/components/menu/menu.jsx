@@ -11,7 +11,7 @@ export default function Menu() {
   };
   return (
     <nav
-      className="menu navbar-expand-md navbar-light bg-light px-2"
+      className="menu navbar-expand-md navbar-light px-2"
     >
       <button
         className="navbar-toggler d-lg-none"
