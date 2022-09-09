@@ -7,11 +7,11 @@ export default function Menu() {
   const styleMenu = {
     display: "flex",
     flexDirection: "column",
+    width: "100%",
   };
   return (
     <nav
-      className="menu navbar-expand-md navbar-light bg-light"
-      style={{ height: window.innerHeight }}
+      className="menu navbar-expand-md navbar-light bg-light px-2"
     >
       <button
         className="navbar-toggler d-lg-none"
@@ -24,8 +24,11 @@ export default function Menu() {
       >
         <span className="navbar-toggler-icon" />
       </button>
-      <div className="collapse navbar-collapse" id="collapsibleNavId" >
-        <ul className="navbar-nav mr-auto my-3" style={styleMenu}>
+      <div
+        className="collapse navbar-collapse"
+        id="collapsibleNavId"
+      >
+        <ul className="navbar-nav my-3" style={styleMenu}>
           <li className="nav-item ">
             <NavLink
               className="nav-link account d-flex align-items-center m-0"
@@ -75,7 +78,10 @@ export default function Menu() {
               User management
             </NavLink>
           </li>
-          <li className="nav-item d-flex align-items-center feature" style={{borderTop: "2px dashed black"}}>
+          <li
+            className="nav-item d-flex align-items-center feature"
+            style={{ borderTop: "2px dashed black" }}
+          >
             <i className="mr-2 fa fa-truck" />
             <a
               className="nav-link text-dark"

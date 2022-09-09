@@ -166,12 +166,24 @@ export default function TableManagement() {
 
   const columns = [
     {
+      title: "ID & Name",
+      render: (record) => (
+        <React.Fragment>
+          {record.userId}
+          <br />
+          {record.name}
+        </React.Fragment>
+      ),
+      responsive: ["xs"],
+    },
+    {
       title: "ID",
       dataIndex: "userId",
       key: "userId",
       ...getColumnSearchProps("id"),
       sortDirections: ["descend"],
       sorter: (item2, item1) => item2.userId - item1.userId,
+      responsive: ["sm"],
     },
     {
       title: "Name",
@@ -188,6 +200,18 @@ export default function TableManagement() {
           return 1;
         }
       },
+      responsive: ["sm"],
+    },
+    {
+      title: "Email & Phone",
+      render: (record) => (
+        <React.Fragment>
+          {record.email}
+          <br />
+          {record.phoneNumber}
+        </React.Fragment>
+      ),
+      responsive: ["xs"],
     },
     {
       title: "Email",
@@ -204,11 +228,13 @@ export default function TableManagement() {
           return 1;
         }
       },
+      responsive: ["sm"],
     },
     {
       title: "Phone number",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
+      responsive: ["sm"],
     },
     {
       title: "Action",
@@ -243,7 +269,7 @@ export default function TableManagement() {
     <div className="text-center">
       <h3 className="mb-3 font-weight-bold">User management</h3>
       <Table
-        className="table m-0"
+      className="table"
         rowKey={"userId"}
         columns={columns}
         dataSource={arrUser}

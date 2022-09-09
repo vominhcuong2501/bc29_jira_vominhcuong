@@ -186,12 +186,37 @@ export default function TableManagement() {
 
   const columns = [
     {
+      title: "ID & Creator",
+      render: (record) => (
+        <React.Fragment>
+          {record.id}
+          <br />
+          <Tag color="green">{record.creator?.name}</Tag>
+        </React.Fragment>
+      ),
+      responsive: ["xs"],
+    },
+    {
       title: "ID",
       dataIndex: "id",
       key: "id",
       ...getColumnSearchProps("id"),
       sortDirections: ["descend"],
       sorter: (item2, item1) => item2.id - item1.id,
+      responsive: ["sm"],
+    },
+    {
+      title: "Name & Category",
+      render: (record) => (
+        <React.Fragment>
+          <NavLink className="text-primary" to={`/project-detail/${record.id}`}>
+            {record.projectName}
+          </NavLink>
+          <br />
+          {record.categoryName}
+        </React.Fragment>
+      ),
+      responsive: ["xs"],
     },
     {
       title: "Project name",
@@ -215,6 +240,7 @@ export default function TableManagement() {
           </NavLink>
         );
       },
+      responsive: ["sm"],
     },
     {
       title: "Category",
@@ -231,6 +257,7 @@ export default function TableManagement() {
           return 1;
         }
       },
+      responsive: ["sm"],
     },
     {
       title: "Creator",
@@ -246,6 +273,7 @@ export default function TableManagement() {
         }
       },
       render: (_, record) => <Tag color="green">{record.creator?.name}</Tag>,
+      responsive: ["sm"],
     },
     {
       title: "Members",
@@ -415,6 +443,7 @@ export default function TableManagement() {
         rowKey={"id"}
         columns={columns}
         dataSource={table}
+        className="table"
       />
     </div>
   );
