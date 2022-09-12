@@ -13,7 +13,7 @@ const DEFAULT_STATE = {
   userSearch: [],
   userByProject: [],
   arrUser: [],
-  userEdit: {}
+  userEdit: {},
 };
 
 export const userReducer = (state = DEFAULT_STATE, { type, payload }) => {

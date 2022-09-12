@@ -20,7 +20,7 @@ export default function Login() {
   }, []);
 
   return (
-    <div className="container-fluid p-0">
+    <div className="container-fluid p-0" style={{overflow: "hidden"}}>
       <Layout className="row">
         <Sider className="d-md-block d-none"
           width={size.width / 2}

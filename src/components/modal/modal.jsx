@@ -300,7 +300,6 @@ export default function TaskDetailModal() {
       });
     }
   };
-  console.log(searchTask);
 
   return (
     <div>

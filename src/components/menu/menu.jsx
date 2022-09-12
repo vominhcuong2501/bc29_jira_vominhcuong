@@ -82,7 +82,7 @@ export default function Menu() {
             className="nav-item d-flex align-items-center feature"
             style={{ borderTop: "2px dashed black" }}
           >
-            <i className="mr-2 fa fa-truck" />
+            <i className="mr-1 fa fa-truck" />
             <a
               className="nav-link text-dark"
               style={{ textDecoration: "none" }}

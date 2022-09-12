@@ -16,7 +16,7 @@ export default function MainInfo(props) {
 
   return (
     <div>
-      <h3>{projectName}</h3>
+      <h3 className="font-weight-bold text-success">{projectName}</h3>
       <section>{descriptionHtml}</section>
       <div className="info" style={{ display: "flex", alignItems: "center" }}>
         <span className="font-weight-bold m-0">Members:</span>

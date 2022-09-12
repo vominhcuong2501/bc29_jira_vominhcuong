@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Checkbox, Form, Input, notification } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
@@ -6,9 +6,9 @@ import { setUserAction } from "../../store/actions/userAction";
 import { fetchUserLogin } from "../../services/user";
 import { USER_LOGIN_KEY } from "../../constans/common";
 import { useNavigate } from "react-router-dom";
+import { REMEMBER_USER } from "../../store/types/userType";
 
 export default function FormLogin() {
-
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -16,6 +16,11 @@ export default function FormLogin() {
   const [form] = Form.useForm();
 
   const handleSubmit = async (values) => {
+    if (values.remember) {
+      localStorage.setItem(REMEMBER_USER, JSON.stringify(values));
+    } else {
+      localStorage.removeItem(REMEMBER_USER);
+    }
     try {
       const result = await fetchUserLogin(values);
       localStorage.setItem(USER_LOGIN_KEY, JSON.stringify(result.data.content));
@@ -31,6 +36,28 @@ export default function FormLogin() {
     }
   };
 
+  let rememberUser = localStorage.getItem(REMEMBER_USER);
+  if (rememberUser) {
+    rememberUser = JSON.parse(rememberUser);
+  }
+
+  useEffect(() => {
+    if (rememberUser) {
+      form.setFieldsValue({
+        ...rememberUser,
+      });
+    }
+  }, [rememberUser]);
+
+  // FB.getLoginStatus(function (response) {
+  //   statusChangeCallback(response);
+  // });
+
+  // const checkLoginState = () => {
+  //   FB.getLoginStatus(function (response) {
+  //     statusChangeCallback(response);
+  //   });
+  // }
   return (
     <Form
       width={window.innerWidth / 2}
@@ -39,6 +66,7 @@ export default function FormLogin() {
       initialValues={{
         email: "",
         passWord: "",
+        remember: false,
       }}
     >
       <Form.Item
@@ -110,8 +138,10 @@ export default function FormLogin() {
           );
         }}
       </Form.Item>
-      {/* <div className="text-center">
+      <div className="text-center">
         <Button
+        // onlogin={checkLoginState}
+          title="Login with Facebook"
           style={{
             backgroundColor: "#065fd4",
             margin: "0 5px",
@@ -124,15 +154,7 @@ export default function FormLogin() {
             style={{ fontSize: 20 }}
           ></i>
         </Button>
-        <Button
-          type="primary"
-          shape="circle"
-          size="large"
-          style={{ margin: "0 5px" }}
-        >
-          <i className="fab fa-twitter" style={{ fontSize: 20 }}></i>
-        </Button>
-      </div> */}
+      </div>
     </Form>
   );
 }
