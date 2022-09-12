@@ -90,7 +90,8 @@ export default function FormCreateTask() {
   };
 
   return (
-    <div className="d-flex flex-column mt-3 justify-content-center align-items-center container">
+    <div className="container">
+      <div className="d-flex flex-column mt-3 justify-content-center align-items-center ">
       <Form
         layout="vertical"
         form={form}
@@ -374,6 +375,7 @@ export default function FormCreateTask() {
           </Button>
         </Form.Item>
       </Form>
+    </div>
     </div>
   );
 }
