@@ -125,7 +125,7 @@ export default function FromRegister() {
           return (
             <>
               <Button
-                style={{ backgroundColor: "#065fd4" }}
+                style={{ backgroundColor: "rgb(102, 117, 223)" }}
                 htmlType="submit"
                 block
                 disabled={

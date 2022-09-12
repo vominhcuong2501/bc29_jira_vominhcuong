@@ -22,7 +22,7 @@ export default function Register() {
   return (
     <div className="container-fluid p-0">
       <Layout>
-        <Sider
+        <Sider className="d-md-block d-none"
           width={size.width / 2}
           style={{
             height: size.height,

@@ -93,6 +93,7 @@ export default function FormCreateTask() {
     <div className="container">
       <div className="d-flex flex-column mt-3 justify-content-center align-items-center ">
       <Form
+      className="row"
         layout="vertical"
         form={form}
         onFinish={handleSubmit}
@@ -108,7 +109,6 @@ export default function FormCreateTask() {
           originalEstimate: 0,
         }}
       >
-        <div className="row">
           <div className="col-12">
             <Form.Item
               name="projectId"
@@ -281,7 +281,7 @@ export default function FormCreateTask() {
               <InputNumber type="number" size="large" />
             </Form.Item>
           </div>
-          <div className="col-md-3 col-12 p-0">
+          <div className="col-md-3 col-12 ">
             <Form.Item
               name="timeTrackingSpent"
               label="Time spent"
@@ -306,7 +306,7 @@ export default function FormCreateTask() {
               />
             </Form.Item>
           </div>
-          <div className="col-md-3 col-12 p-0">
+          <div className="col-md-3 col-12">
             <Form.Item
               name="timeTrackingRemaining"
               label="Time remaining"
@@ -357,7 +357,6 @@ export default function FormCreateTask() {
               }}
             />
           </div>
-        </div>
         <Form.Item className="text-right">
           <Button
             className="mt-4 text-light"

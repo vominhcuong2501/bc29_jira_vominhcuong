@@ -53,7 +53,7 @@ export default function TaskDetailModal() {
 
   const [typeId, setTypeId] = useState();
 
-  const [searchTask, setSearchTask] = useState();
+  const [searchTask, setSearchTask] = useState([]);
 
   const [user, setUser] = useState();
 
@@ -281,14 +281,16 @@ export default function TaskDetailModal() {
   };
 
   const onSearch = (value) => {
-    let search = taskDetailModal.lstTask?.lstTaskDeTail.filter((ele) => {
-      return (
-        ele.taskName
-          .toLowerCase()
-          .trim()
-          .indexOf(value.toLowerCase().trim()) !== -1
-      );
-    });
+    let search = projectDetail.lstTask?.map(ele => {
+      return ele.lstTaskDeTail.filter((ele) => {
+        return (
+          ele.taskName
+            .toLowerCase()
+            .trim()
+            .indexOf(value.toLowerCase().trim()) !== -1
+        );
+      });
+    })
 
     if (search) {
       setSearchTask(search);
@@ -298,6 +300,7 @@ export default function TaskDetailModal() {
       });
     }
   };
+  console.log(searchTask);
 
   return (
     <div>
@@ -331,13 +334,14 @@ export default function TaskDetailModal() {
               </button>
             </div>
             <div className="modal-body">
-              <p>RECENT TASK</p>
-              {projectDetail.lstTask?.map((ele) => {
-                return ele.lstTaskDeTail.map((ele) => {
+              <p>{projectDetail.projectName ? `Task list in ${projectDetail.projectName}` : "Please choose a project !!!"}</p>
+              {searchTask?.map((ele) => {
                   return (
-                    <div
+                   ele.map((ele, index) => {
+                    return (
+                      <div
                       style={{ display: "flex" }}
-                      key={ele.taskName}
+                      key={index}
                       data-toggle="modal"
                       data-target="#infoModal"
                       onClick={async () => {
@@ -361,12 +365,14 @@ export default function TaskDetailModal() {
                       <div>
                         <p>{ele.taskName}</p>
                         <p style={{ fontSize: 13 }}>
-                          {ele.taskTypeDetail.taskType}
+                          {ele.taskTypeDetail?.taskType}
                         </p>
                       </div>
                     </div>
+                    )
+                   })
                   );
-                });
+            
               })}
             </div>
           </div>

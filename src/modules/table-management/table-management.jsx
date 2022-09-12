@@ -282,8 +282,6 @@ export default function TableManagement() {
       title: "Members",
       dataIndex: "members",
       key: "members",
-      sortDirections: ["descend", "ascend"],
-      sorter: (a, b) => a.member.length - b.member.length,
       render: (_, record) => {
         return (
           <div>
