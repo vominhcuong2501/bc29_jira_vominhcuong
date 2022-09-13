@@ -281,7 +281,7 @@ export default function TaskDetailModal() {
   };
 
   const onSearch = (value) => {
-    let search = projectDetail.lstTask?.map(ele => {
+    let search = projectDetail.lstTask?.map((ele) => {
       return ele.lstTaskDeTail.filter((ele) => {
         return (
           ele.taskName
@@ -290,14 +290,10 @@ export default function TaskDetailModal() {
             .indexOf(value.toLowerCase().trim()) !== -1
         );
       });
-    })
+    });
 
     if (search) {
       setSearchTask(search);
-    } else {
-      notification.warning({
-        message: "No result !!!!",
-      });
     }
   };
 
@@ -333,12 +329,15 @@ export default function TaskDetailModal() {
               </button>
             </div>
             <div className="modal-body">
-              <p>{projectDetail.projectName ? `Task list in ${projectDetail.projectName}` : "Please choose a project !!!"}</p>
+              <p>
+                {projectDetail.projectName
+                  ? `Tasks in ${projectDetail.projectName}`
+                  : "Please choose a project and click search !!!"}
+              </p>
               {searchTask?.map((ele) => {
+                return ele?.map((ele, index) => {
                   return (
-                   ele.map((ele, index) => {
-                    return (
-                      <div
+                    <div
                       style={{ display: "flex" }}
                       key={index}
                       data-toggle="modal"
@@ -368,10 +367,8 @@ export default function TaskDetailModal() {
                         </p>
                       </div>
                     </div>
-                    )
-                   })
                   );
-            
+                });
               })}
             </div>
           </div>

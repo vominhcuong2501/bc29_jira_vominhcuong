@@ -48,16 +48,6 @@ export default function FormLogin() {
       });
     }
   }, [rememberUser]);
-
-  // FB.getLoginStatus(function (response) {
-  //   statusChangeCallback(response);
-  // });
-
-  // const checkLoginState = () => {
-  //   FB.getLoginStatus(function (response) {
-  //     statusChangeCallback(response);
-  //   });
-  // }
   return (
     <Form
       width={window.innerWidth / 2}
@@ -140,19 +130,19 @@ export default function FormLogin() {
       </Form.Item>
       <div className="text-center">
         <Button
-        // onlogin={checkLoginState}
           title="Login with Facebook"
           style={{
             backgroundColor: "#065fd4",
             margin: "0 5px",
+            color: "white"
           }}
-          shape="circle"
+          // shape="circle"
           size="large"
         >
           <i
-            className="fab fa-facebook-f text-white"
+            className="fab fa-facebook-f text-white mr-2"
             style={{ fontSize: 20 }}
-          ></i>
+          ></i> Login with Facebook
         </Button>
       </div>
     </Form>
