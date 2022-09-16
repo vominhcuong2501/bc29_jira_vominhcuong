@@ -19,7 +19,7 @@ export default function Header() {
           <h5 className="font-weight-bold text-warning m-0 mr-2">
             {userInfo?.name}
           </h5>
-          <button className="btn btn-outline-danger">
+          <button className="btn btn-outline-danger" title="Log out">
             <i
               className="fas fa-sign-out-alt ml-2"
               onClick={() => {
@@ -28,7 +28,6 @@ export default function Header() {
                 navigate("/login");
               }}
               style={{ cursor: "pointer" }}
-              title="Log out"
             ></i>
           </button>
         </div>

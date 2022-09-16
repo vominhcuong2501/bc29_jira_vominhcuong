@@ -180,7 +180,6 @@ export default function TableManagement() {
       title: "ID",
       dataIndex: "userId",
       key: "userId",
-      ...getColumnSearchProps("id"),
       sortDirections: ["descend"],
       sorter: (item2, item1) => item2.userId - item1.userId,
       responsive: ["sm"],

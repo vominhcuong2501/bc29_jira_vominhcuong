@@ -24,7 +24,7 @@ export default function FromRegister() {
       navigate("/login");
     } catch (err) {
       notification.error({
-        message: err.response.data.content,
+        message: err.response.data.message,
       });
     }
   };
@@ -70,6 +70,12 @@ export default function FromRegister() {
             required: true,
             message: "Please input your password!",
           },
+          {
+            pattern:
+              /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{0,}$/,
+            message:
+              "Passwors is invalid (Ex: Teo@123, Miku$123)",
+          },
         ]}
       >
         <Input.Password
@@ -110,6 +116,11 @@ export default function FromRegister() {
           {
             required: true,
             message: "Please input your phone number!",
+          },
+          {
+            pattern:
+              "^[0-9]+$",
+            message: "Phone number is invalid",
           },
         ]}
       >

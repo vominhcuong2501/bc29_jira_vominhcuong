@@ -30,8 +30,9 @@ export default function FormLogin() {
       });
       navigate("/");
     } catch (err) {
+      console.log(err);
       notification.error({
-        message: err.response.data?.content,
+        message: err.response.data?.message,
       });
     }
   };
@@ -88,6 +89,7 @@ export default function FormLogin() {
             required: true,
             message: "Please input your password!",
           },
+
         ]}
       >
         <Input.Password
