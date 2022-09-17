@@ -19,16 +19,16 @@ export default function Header() {
           <h5 className="font-weight-bold text-warning m-0 mr-2">
             {userInfo?.name}
           </h5>
-          <button className="btn btn-outline-danger" title="Log out">
-            <i
-              className="fas fa-sign-out-alt ml-2"
-              onClick={() => {
-                localStorage.removeItem(USER_LOGIN_KEY);
-                dispatch(setUserAction(null));
-                navigate("/login");
-              }}
-              style={{ cursor: "pointer" }}
-            ></i>
+          <button
+            className="btn btn-outline-danger"
+            title="Log out"
+            onClick={() => {
+              localStorage.removeItem(USER_LOGIN_KEY);
+              dispatch(setUserAction(null));
+              navigate("/login");
+            }}
+          >
+            <i className="fas fa-sign-out-alt ml-2"></i>
           </button>
         </div>
       </div>
