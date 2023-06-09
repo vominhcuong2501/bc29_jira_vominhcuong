@@ -12,7 +12,6 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #111;
 }
 
 h2 {
@@ -24,7 +23,7 @@ h2 {
 h2::before {
   content: attr(data-text);
   position: absolute;
-  color: #fff;
+  color: #ff6700;
   width: 500px;
   overflow: hidden;
   white-space: nowrap;
