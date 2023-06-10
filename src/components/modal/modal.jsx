@@ -299,6 +299,7 @@ export default function TaskDetailModal() {
 
   return (
     <div>
+      {/* search task  */}
       <div
         className="modal fade"
         id="searchModal"
@@ -332,7 +333,7 @@ export default function TaskDetailModal() {
               <p>
                 {projectDetail.projectName
                   ? `Tasks in ${projectDetail.projectName}`
-                  : "Please choose a project and click search !!!"}
+                  : "Please choose a project and search task in that project !!!"}
               </p>
               {searchTask?.map((ele) => {
                 return ele?.map((ele, index) => {
@@ -374,6 +375,8 @@ export default function TaskDetailModal() {
           </div>
         </div>
       </div>
+
+      {/* modal task detail  */}
       <div
         className="modal fade"
         id="infoModal"
@@ -385,6 +388,7 @@ export default function TaskDetailModal() {
         <div className="modal-dialog modal-info">
           <div className="modal-content">
             <div className="modal-header pb-0">
+              {/* task type */}
               <div className="taskType task-title d-flex align-items-center">
                 <p className="mr-2 text-warning font-weight-bold mb-0">
                   <i className="fas fa-tasks text-danger"></i>
@@ -426,6 +430,8 @@ export default function TaskDetailModal() {
                   })}
                 </select>
               </div>
+
+              {/* delete task  */}
               <div
                 className="delete-task task-click"
                 style={{ display: "flex" }}
@@ -464,6 +470,7 @@ export default function TaskDetailModal() {
               <div className="container-fluid">
                 <div className="row">
                   <div className="col-lg-8 col-12">
+                    {/* task name  */}
                     <h3 className="taskName font-weight-bold mt-3 mb-4">
                       {visibleTaskName ? (
                         <div className="input-group mb-3">
@@ -522,12 +529,16 @@ export default function TaskDetailModal() {
                         </div>
                       )}
                     </h3>
+
+                    {/* description task  */}
                     <div className="description">
                       <h6 className="text-warning font-weight-bold">
                         Description
                       </h6>
                       {renderDesciption()}
                     </div>
+
+                    {/* comment task  */}
                     <div className="comment mt-3">
                       <h6 className="text-warning font-weight-bold mb-3">
                         Comment
@@ -696,7 +707,9 @@ export default function TaskDetailModal() {
                       </div>
                     </div>
                   </div>
+
                   <div className="col-lg-4 col-12">
+                    {/* status task  */}
                     <div className="status">
                       <h6 className="text-warning font-weight-bold">STATUS</h6>
                       <select
@@ -734,6 +747,8 @@ export default function TaskDetailModal() {
                         })}
                       </select>
                     </div>
+
+                    {/* asignees task  */}
                     <div className="assignees">
                       <h6 className="text-warning font-weight-bold">
                         ASSIGNEES
@@ -772,6 +787,8 @@ export default function TaskDetailModal() {
                         </div>
                       </div>
                     </div>
+
+                    {/* priority task  */}
                     <div className="priority" style={{ margin: "20px 0" }}>
                       <h6 className="text-warning font-weight-bold">
                         PRIORITY
@@ -811,6 +828,8 @@ export default function TaskDetailModal() {
                         })}
                       </select>
                     </div>
+
+                    {/* estimate time  */}
                     <div className="estimate">
                       <h6 className="text-warning font-weight-bold">
                         ORIGINAL ESTIMATE (HOURS)

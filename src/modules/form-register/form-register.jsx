@@ -10,9 +10,8 @@ import { fetchUserRegister } from "../../services/user";
 import { useNavigate } from "react-router-dom";
 
 export default function FromRegister() {
-
   const navigate = useNavigate();
-  
+
   const [form] = Form.useForm();
 
   const handleSubmit = async (values) => {
@@ -73,8 +72,7 @@ export default function FromRegister() {
           {
             pattern:
               /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{0,}$/,
-            message:
-              "Passwors is invalid (Ex: Teo@123, Miku$123)",
+            message: "Passwors is invalid (Ex: Teo@123, Miku$123)",
           },
         ]}
       >
@@ -118,8 +116,7 @@ export default function FromRegister() {
             message: "Please input your phone number!",
           },
           {
-            pattern:
-              "^[0-9]+$",
+            pattern: "^[0-9]+$",
             message: "Phone number is invalid",
           },
         ]}

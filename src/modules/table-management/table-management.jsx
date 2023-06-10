@@ -213,7 +213,7 @@ export default function TableManagement() {
             {record.projectName}
           </NavLink>
           <br />
-          {record.categoryName}          
+          {record.categoryName}
         </React.Fragment>
       ),
       responsive: ["xs"],
@@ -241,7 +241,6 @@ export default function TableManagement() {
         );
       },
       responsive: ["sm"],
-
     },
     {
       title: "Category",
@@ -259,7 +258,6 @@ export default function TableManagement() {
         }
       },
       responsive: ["sm"],
-
     },
     {
       title: "Creator",
@@ -276,7 +274,6 @@ export default function TableManagement() {
       },
       render: (_, record) => <Tag color="green">{record.creator?.name}</Tag>,
       responsive: ["sm"],
-
     },
     {
       title: "Members",
@@ -437,6 +434,7 @@ export default function TableManagement() {
       ),
     },
   ];
+
   return (
     <div className="text-center">
       <h3 className="mb-3 font-weight-bold">Project management</h3>
