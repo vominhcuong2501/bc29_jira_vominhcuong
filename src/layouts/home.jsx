@@ -212,11 +212,11 @@ export default function HomeLayout() {
           <TaskDetailModal />
         </div>
       ) : (
-        <div class="Block_The_Matrix_Viewport _half_Y">
-          <div class="Command_Line_sB">
-            <span class="blinking_cursor"></span>
+        <div className="Block_The_Matrix_Viewport _half_Y">
+          <div className="Command_Line_sB">
+            <span className="blinking_cursor"></span>
           </div>
-          <div class="Matrix_Code_sB"></div>
+          <div className="Matrix_Code_sB"></div>
         </div>
       )}
     </>
