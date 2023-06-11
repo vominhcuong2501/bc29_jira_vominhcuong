@@ -16,11 +16,14 @@ export default function FormLogin() {
   const [form] = Form.useForm();
 
   const handleSubmit = async (values) => {
+    // nếu check ô remember sẽ set thông tin login vào localstorage
     if (values.remember) {
       localStorage.setItem(REMEMBER_USER, JSON.stringify(values));
     } else {
       localStorage.removeItem(REMEMBER_USER);
     }
+
+    // submit form
     try {
       const result = await fetchUserLogin(values);
       localStorage.setItem(USER_LOGIN_KEY, JSON.stringify(result.data.content));
@@ -37,11 +40,12 @@ export default function FormLogin() {
     }
   };
 
+  // nếu có thông tin remember trên localstorage thì sẽ lấy nó về chuyển thành object
   let rememberUser = localStorage.getItem(REMEMBER_USER);
   if (rememberUser) {
     rememberUser = JSON.parse(rememberUser);
   }
-
+  // set thông tin vào form và thực hiện thay dổi thông tin khi có nhu cầu
   useEffect(() => {
     if (rememberUser) {
       form.setFieldsValue({
@@ -49,6 +53,7 @@ export default function FormLogin() {
       });
     }
   }, [rememberUser]);
+
   return (
     <Form
       width={window.innerWidth / 2}
@@ -89,7 +94,11 @@ export default function FormLogin() {
             required: true,
             message: "Please input your password!",
           },
-
+          {
+            pattern:
+              /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{0,}$/,
+            message: "Passwors is invalid (Ex: Teo@123, Miku$123)",
+          },
         ]}
       >
         <Input.Password
@@ -102,6 +111,7 @@ export default function FormLogin() {
       <Form.Item name="remember" valuePropName="checked">
         <Checkbox>Remember me</Checkbox>
       </Form.Item>
+
       <Form.Item shouldUpdate>
         {() => {
           return (

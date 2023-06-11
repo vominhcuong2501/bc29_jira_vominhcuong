@@ -10,13 +10,11 @@ import { closeEditModalAction } from "../../store/actions/modalEditAction";
 import { setTableAction } from "../../store/actions/projectAction";
 
 export default function FormEditProject() {
-
   const [form] = Form.useForm();
 
   const dispatch = useDispatch();
 
   const { projectEdit, table } = useSelector((state) => state.projectReducer);
-
   const { state: arrProject = [] } = useAsync({
     service: () => fetchProjectCategoryApi(),
   });
@@ -49,6 +47,7 @@ export default function FormEditProject() {
       });
     }
 
+    // update lại giao diện khi có thay dổi do lấy từ redux về
     for (let key in table) {
       let newCategoryName = "";
       if (projectUpdate.categoryId === 1) {
@@ -72,7 +71,7 @@ export default function FormEditProject() {
   };
 
   return (
-    <div >
+    <div>
       <Form
         layout="vertical"
         form={form}

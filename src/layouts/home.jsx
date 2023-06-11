@@ -4,7 +4,7 @@ import Menu from "../components/menu/menu";
 import Sidebar from "../components/sidebar/sidebar";
 import TaskDetailModal from "../components/modal/modal";
 import Header from "../components/header/header";
-import "./text-mobile.css"
+import "./text-mobile.css";
 
 export default function HomeLayout() {
   const windowWidth = window.innerWidth;
