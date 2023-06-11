@@ -24,9 +24,11 @@ export default function HomeLayout() {
           <TaskDetailModal />
         </div>
       ) : (
-        <h2 data-text="&nbsp;♣ Mobile is not display ♠&nbsp;">
-          &nbsp;♣ Mobile is not display ♠&nbsp;
-        </h2>
+        <div className="content-loading-mobile">
+          <h2 data-text="&nbsp;♣ Mobile is not display ♠&nbsp;">
+            &nbsp;♣ Mobile is not display ♠&nbsp;
+          </h2>
+        </div>
       )}
     </>
   );
