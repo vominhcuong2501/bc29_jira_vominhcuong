@@ -25,9 +25,19 @@ export default function HomeLayout() {
         </div>
       ) : (
         <div className="content-loading-mobile">
-          <h2 data-text="&nbsp;♣ Mobile is not display ♠&nbsp;">
-            &nbsp;♣ Mobile is not display ♠&nbsp;
+          <h2>
+            Sorry, <br />
+            The application is not yet available for mobile devices
           </h2>
+          <ul className="animation-color-dot">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
         </div>
       )}
     </>

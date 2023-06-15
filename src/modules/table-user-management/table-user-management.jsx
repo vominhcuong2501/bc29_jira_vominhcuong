@@ -17,7 +17,6 @@ import "./table-user-management.scss";
 import { openFormEditUserAction } from "../../store/actions/modalEditAction";
 
 export default function TableManagement() {
-
   const dispatch = useDispatch();
 
   const { arrUser } = useSelector((state) => state.userReducer);
@@ -268,7 +267,7 @@ export default function TableManagement() {
     <div className="text-center">
       <h3 className="mb-3 font-weight-bold">User management</h3>
       <Table
-      className="table"
+        className="table"
         rowKey={"userId"}
         columns={columns}
         dataSource={arrUser}
