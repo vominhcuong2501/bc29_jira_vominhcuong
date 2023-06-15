@@ -47,14 +47,14 @@ export default function FormCreateProject() {
   const editorRef = useRef(null);
 
   const handleSubmit = async (values) => {
-    const project = {...values, description: editorRef.current.getContent()}
-    try{
+    const project = { ...values, description: editorRef.current.getContent() }
+    try {
       await fetchCreateProjectAuthorizeApi(project)
       notification.success({
         description: "Successfully !"
       })
       navigate("/")
-    } catch(err) {
+    } catch (err) {
       notification.error({
         message: err.response.data.content
       })
@@ -107,7 +107,7 @@ export default function FormCreateProject() {
           init={{
             height: 200,
             menubar: false,
-          
+
             toolbar:
               "undo redo | formatselect | " +
               "bold italic backcolor | alignleft aligncenter " +
@@ -142,7 +142,7 @@ export default function FormCreateProject() {
           {() => {
             return (
               <Button
-              className="text-light text-right"
+                className="text-light text-right"
                 style={{ backgroundColor: "#065fd4" }}
                 htmlType="submit"
                 disabled={
@@ -150,7 +150,7 @@ export default function FormCreateProject() {
                   form.getFieldsError().some((ele) => ele.errors.length > 0)
                 }
               >
-              Create project
+                Create project
               </Button>
             );
           }}

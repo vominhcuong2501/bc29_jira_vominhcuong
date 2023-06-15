@@ -14,8 +14,14 @@ import {
 } from "../../store/actions/taskAction";
 import { Editor } from "@tinymce/tinymce-react";
 import { CHANGE_TASK_MODAL } from "../../store/types/taskType";
-import { fetchGetProjectDetailApi } from "../../services/project";
-import { getProjectDetailAction } from "../../store/actions/projectAction";
+import {
+  fetchGetAllProjectApi,
+  fetchGetProjectDetailApi,
+} from "../../services/project";
+import {
+  getProjectDetailAction,
+  getTableAction,
+} from "../../store/actions/projectAction";
 import { Select, notification, Space, Input } from "antd";
 import {
   fetchRemoveTaskApi,
@@ -33,6 +39,7 @@ import {
   fetchGetCommentApi,
   fetchUpdateCommentApi,
 } from "../../services/comment";
+import { fetchProjectCategoryApi } from "../../services/category";
 
 export default function TaskDetailModal() {
   const { Search } = Input;
@@ -55,6 +62,8 @@ export default function TaskDetailModal() {
 
   const [searchTask, setSearchTask] = useState([]);
 
+  const [searchProject, setSearchProject] = useState([]);
+
   const [user, setUser] = useState();
 
   const [comment, setComment] = useState();
@@ -63,7 +72,7 @@ export default function TaskDetailModal() {
 
   const [commentEdit, setCommentEdit] = useState();
 
-  const { projectDetail } = useSelector((state) => state.projectReducer);
+  const { projectDetail, table } = useSelector((state) => state.projectReducer);
 
   const userOption = projectDetail.members?.map((ele) => {
     return { value: ele.userId, label: ele.name };
@@ -99,6 +108,15 @@ export default function TaskDetailModal() {
     service: () => fetchGetCommentApi(taskDetailModal.taskId),
     dependencies: [taskDetailModal],
   });
+
+  useEffect(() => {
+    fetchGetAllProject();
+  }, []);
+
+  const fetchGetAllProject = async () => {
+    const result = await fetchGetAllProjectApi();
+    dispatch(getTableAction(result.data.content));
+  };
 
   const setProjectDetail = async () => {
     const result = await fetchGetProjectDetailApi(taskDetailModal.projectId);
@@ -280,7 +298,22 @@ export default function TaskDetailModal() {
     );
   };
 
-  const onSearch = (value) => {
+  const onSearchProject = (value) => {
+    let search = table?.filter((ele) => {
+      return (
+        ele.projectName
+          .toLowerCase()
+          .trim()
+          .indexOf(value.toLowerCase().trim()) !== -1
+      );
+    });
+
+    if (search) {
+      setSearchProject(search);
+    }
+  };
+
+  const onSearchTask = (value) => {
     let search = projectDetail.lstTask?.map((ele) => {
       return ele.lstTaskDeTail.filter((ele) => {
         return (
@@ -299,13 +332,13 @@ export default function TaskDetailModal() {
 
   return (
     <div>
-      {/* search task  */}
+      {/* search project  */}
       <div
         className="modal fade"
-        id="searchModal"
+        id="searchProject"
         tabIndex={-1}
         role="dialog"
-        aria-labelledby="searchModal"
+        aria-labelledby="searchProject"
         aria-hidden="true"
       >
         <div className="modal-dialog modal-search">
@@ -313,8 +346,8 @@ export default function TaskDetailModal() {
             <div className="modal-header">
               <Space direction="vertical">
                 <Search
-                  placeholder="Enter task name"
-                  onSearch={onSearch}
+                  placeholder="Enter project name"
+                  onSearch={onSearchProject}
                   enterButton
                   name="keyword"
                   allowClear
@@ -330,11 +363,61 @@ export default function TaskDetailModal() {
               </button>
             </div>
             <div className="modal-body">
-              <p>
-                {projectDetail.projectName
-                  ? `Tasks in ${projectDetail.projectName}`
-                  : "Please choose a project and search task in that project !!!"}
-              </p>
+              {searchProject != ""
+                ? searchProject.map((ele) => {
+                  return (
+                    <p key={ele.id}>
+                      <a href={`/project-detail/${ele.id}`} target="_self">
+                        {ele.projectName}
+                      </a>
+                    </p>
+                  );
+                })
+                : table.map((ele) => {
+                  return (
+                    <p key={ele.id}>
+                      <a href={`/project-detail/${ele.id}`} target="_self">
+                        {ele.projectName}
+                      </a>
+                    </p>
+                  );
+                })}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* search task  */}
+      <div
+        className="modal fade"
+        id="searchTask"
+        tabIndex={-1}
+        role="dialog"
+        aria-labelledby="searchTask"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-search">
+          <div className="modal-content">
+            <div className="modal-header">
+              <Space direction="vertical">
+                <Search
+                  placeholder="Enter task name"
+                  onSearch={onSearchTask}
+                  enterButton
+                  name="keyword"
+                  allowClear
+                />
+              </Space>
+              <button
+                type="button"
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div className="modal-body">
               {searchTask?.map((ele) => {
                 return ele?.map((ele, index) => {
                   return (

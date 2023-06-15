@@ -29,7 +29,7 @@ export default function Sidebar() {
     },
     {
       label: (
-        <a data-toggle="modal" data-target="#searchModal">
+        <a data-toggle="modal" data-target="#searchProject">
           Search task
         </a>
       ),
